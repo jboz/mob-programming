@@ -1,8 +1,18 @@
 <mat-toolbar color="primary" class="mat-elevation-z8">
-  Mob programming timer
+  <span fxFlex="1 1 auto">Mob programming timer</span>
+  <button (click)="clearState()" mat-icon-button>
+    <mat-icon>clear_all</mat-icon>
+  </button>
 </mat-toolbar>
 
-<div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="50px">
+<div
+  fxLayout="row"
+  fxLayoutAlign="space-around center"
+  fxLayout.lt-sm="column"
+  fxLayoutAlign.lt-sm="center center"
+  fxLayoutGap.lt-sm="3em"
+  fxFlexFill
+>
   <app-timer></app-timer>
   <app-mobers></app-mobers>
 </div>

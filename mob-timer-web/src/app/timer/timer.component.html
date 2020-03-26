@@ -1,21 +1,16 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="50px">
   <div class="counter">
-    <ng-container *ngIf="counter$ | async as counter">
-      <span>{{ counter.get("minutes") | number: "2." }}</span>
+    <ng-container>
+      <span>{{ counter.get('minutes') | number: '2.' }}</span>
       <span>:</span>
-      <span>{{ counter.get("seconds") | number: "2." }}</span>
+      <span>{{ counter.get('seconds') | number: '2.' }}</span>
     </ng-container>
   </div>
   <div fxLayout="row">
-    <button
-      (click)="start()"
-      *ngIf="!counter$"
-      color="accent"
-      mat-raised-button
-    >
+    <button (click)="start()" *ngIf="!started" color="accent" mat-raised-button>
       <mat-icon>play_arrow</mat-icon>
     </button>
-    <button (click)="stop()" *ngIf="counter$" color="warn" mat-raised-button>
+    <button (click)="stop()" *ngIf="started" color="warn" mat-raised-button>
       <mat-icon>stop</mat-icon>
     </button>
   </div>

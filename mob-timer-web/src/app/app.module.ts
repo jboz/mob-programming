@@ -1,17 +1,22 @@
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsModule } from '@ngxs/store';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { TimerState } from './app.store';
 import { MobersComponent } from './mobers/mobers.component';
-import { MobersState } from './moders.store';
 import { TimerComponent } from './timer/timer.component';
 
 @NgModule({
@@ -20,15 +25,20 @@ import { TimerComponent } from './timer/timer.component';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
 
-    NgxsModule.forRoot([MobersState], { developmentMode: !environment.production }),
+    NgxsModule.forRoot([TimerState], { developmentMode: !environment.production }),
+    NgxsStoragePluginModule.forRoot(),
 
     FlexLayoutModule,
 
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatInputModule,
+    MatListModule,
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]
