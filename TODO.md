@@ -1,0 +1,32 @@
+# TODO :
+
+- timer
+  - web app
+    - icon/color/fonts
+    - web section timer
+      - easy to set time
+      - start
+      - reset
+      - pause
+    - deploy on cloud
+    - ci intégration
+    - web section specified users
+    - web notification timer's up
+    - this notification indicate next user if many
+    - sound on timer's up
+    - can change sound
+    - can change timer looks
+    - keyboard shortcut
+    - timer on new windows, over others ?
+  - command line
+    - timer
+    - specified users
+    - sound timer's up
+    - message next user
+    - sound on timer's up
+- README, static site, FR/EN
+  - principe
+  - avantages
+  - inconvénients
+  - pattern driver
+  - tools
