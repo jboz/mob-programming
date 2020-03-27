@@ -4,13 +4,13 @@
       <div fxLayout="column">
         <button (click)="incrementMinutes()" mat-button>+ 1</button>
         <div class="counter-time">{{ counter.get('minutes') | number: '2.' }}</div>
-        <button (click)="decrementMinutes()" mat-button>- 1</button>
+        <button (click)="decrementMinutes()" [disabled]="counter.get('minutes') === 0" mat-button>- 1</button>
       </div>
       <div>:</div>
       <div fxLayout="column">
         <button (click)="incrementSeconds()" mat-button>+ 10</button>
         <div class="counter-time" fxFlex="1 1 auto">{{ counter.get('seconds') | number: '2.' }}</div>
-        <button (click)="decrementSeconds()" mat-button>- 10</button>
+        <button (click)="decrementSeconds()" [disabled]="counter.asSeconds() === 0" mat-button>- 10</button>
       </div>
     </div>
   </div>

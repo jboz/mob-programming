@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngxs/store';
 import * as moment from 'moment';
 import { interval, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { SetDefaultTimer, TimerState } from '../app.store';
 
 @Component({
   selector: 'app-timer',
@@ -9,13 +11,24 @@ import { map, tap } from 'rxjs/operators';
   styleUrls: ['./timer.component.scss']
 })
 export class TimerComponent implements OnInit {
-  counter: moment.Duration = moment.duration(20, 'seconds');
+  counter: moment.Duration = moment.duration(0);
 
   subscription: Subscription;
 
-  ngOnInit(): void {}
+  constructor(private store: Store) {}
+
+  ngOnInit(): void {
+    this.loadDefaultTimer();
+  }
+
+  private loadDefaultTimer() {
+    this.store.selectOnce(TimerState.defaultTimer).subscribe(timer => (this.counter = timer));
+  }
 
   start() {
+    if (!this.started) {
+      this.store.dispatch(new SetDefaultTimer(this.counter));
+    }
     this.subscription = interval(1000)
       .pipe(
         map(_ => this.counter.add(-1, 'seconds')),
@@ -28,13 +41,20 @@ export class TimerComponent implements OnInit {
       .subscribe();
   }
 
-  get started(): boolean {
-    return !!this.subscription;
+  pause() {
+    this.subscription.unsubscribe();
   }
 
   reset() {
-    this.pause();
-    this.counter = moment.duration(20, 'seconds');
+    if (this.subscription) {
+      this.pause();
+    }
+    this.subscription = null;
+    this.loadDefaultTimer();
+  }
+
+  get started(): boolean {
+    return !!this.subscription && !this.subscription.closed;
   }
 
   incrementSeconds() {
@@ -51,10 +71,5 @@ export class TimerComponent implements OnInit {
 
   decrementMinutes() {
     this.counter.add(-1, 'minutes');
-  }
-
-  pause() {
-    this.subscription.unsubscribe();
-    this.subscription = null;
   }
 }

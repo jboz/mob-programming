@@ -1,31 +1,36 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import * as moment from 'moment';
 
-const DEFAULT: TimerStateModel = { mobers: [], timer: moment.duration(15, 'minutes') };
+const DEFAULT: TimerStateModel = { mobers: [], defaultTimer: moment.duration(15, 'minutes') };
 
 export interface TimerStateModel {
   mobers: string[];
   selectedMober?: string;
-  timer: moment.Duration;
+  defaultTimer: moment.Duration;
 }
 
 export class AddMober {
-  static readonly type = '[Mobers] AddMober]';
+  static readonly type = '[Timer] AddMober]';
   constructor(public readonly mober: string) {}
 }
 
 export class RemoveMober {
-  static readonly type = '[Mobers] RemoveMober]';
+  static readonly type = '[Timer] RemoveMober]';
   constructor(public readonly mober: string) {}
 }
 
 export class SelectMober {
-  static readonly type = '[Mobers] SelectMober]';
+  static readonly type = '[Timer] SelectMober]';
   constructor(public readonly mober: string) {}
 }
 
 export class ClearState {
-  static readonly type = '[Mobers] ClearState]';
+  static readonly type = '[Timer] ClearState]';
+}
+
+export class SetDefaultTimer {
+  static readonly type = '[Timer] SetDefaultTimer]';
+  constructor(public readonly timer: moment.Duration) {}
 }
 
 @State<TimerStateModel>({
@@ -43,6 +48,11 @@ export class TimerState {
     return state.selectedMober;
   }
 
+  @Selector()
+  public static defaultTimer(state: TimerStateModel) {
+    return moment.duration(state.defaultTimer);
+  }
+
   @Action(AddMober)
   public add(ctx: StateContext<TimerStateModel>, { mober }: AddMober) {
     ctx.patchState({ mobers: [...ctx.getState().mobers, mober] });
@@ -52,6 +62,12 @@ export class TimerState {
   @Action(RemoveMober)
   public remove(ctx: StateContext<TimerStateModel>, { mober }: RemoveMober) {
     ctx.patchState({ mobers: [...ctx.getState().mobers.filter(name => name !== mober)] });
+    if (ctx.getState().selectedMober === mober) {
+      ctx.patchState({ selectedMober: undefined });
+      if (ctx.getState().mobers.length > 0) {
+        ctx.patchState({ selectedMober: ctx.getState().mobers[0] });
+      }
+    }
     this.autoSelection(ctx);
   }
 
@@ -68,6 +84,11 @@ export class TimerState {
 
   @Action(ClearState)
   public clear(ctx: StateContext<TimerStateModel>) {
-    ctx.setState(DEFAULT);
+    ctx.setState({ ...DEFAULT, defaultTimer: ctx.getState().defaultTimer });
+  }
+
+  @Action(SetDefaultTimer)
+  public setDefaultTimer(ctx: StateContext<TimerStateModel>, { timer }: SetDefaultTimer) {
+    ctx.patchState({ defaultTimer: timer.clone() });
   }
 }
