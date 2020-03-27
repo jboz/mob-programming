@@ -1,21 +1,15 @@
 {
-  "name": "mob-timer-web",
-  "version": "0.0.0",
+  "name": "timer",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --o",
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "deploy": "firebase deploy --only hosting:timer"
   },
   "private": true,
-  "prettier": {
-    "tabWidth": 2,
-    "semi": true,
-    "singleQuote": true,
-    "printWidth": 140
-  },
   "dependencies": {
     "@angular/animations": "~9.0.6",
     "@angular/cdk": "^9.1.3",
