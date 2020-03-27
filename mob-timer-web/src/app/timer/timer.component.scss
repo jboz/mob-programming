@@ -1,4 +1,8 @@
 .counter {
-  font-size: 150px;
-  height: 50px;
+  font-size: 3vw;
+  line-height: initial;
+
+  .counter-time {
+    font-size: 20vw;
+  }
 }

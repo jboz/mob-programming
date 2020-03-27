@@ -1,17 +1,31 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="50px">
   <div class="counter">
-    <ng-container>
-      <span>{{ counter.get('minutes') | number: '2.' }}</span>
-      <span>:</span>
-      <span>{{ counter.get('seconds') | number: '2.' }}</span>
-    </ng-container>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+      <div fxLayout="column">
+        <button (click)="incrementMinutes()" mat-button>+ 1</button>
+        <div class="counter-time">{{ counter.get('minutes') | number: '2.' }}</div>
+        <button (click)="decrementMinutes()" mat-button>- 1</button>
+      </div>
+      <div>:</div>
+      <div fxLayout="column">
+        <button (click)="incrementSeconds()" mat-button>+ 10</button>
+        <div class="counter-time" fxFlex="1 1 auto">{{ counter.get('seconds') | number: '2.' }}</div>
+        <button (click)="decrementSeconds()" mat-button>- 10</button>
+      </div>
+    </div>
   </div>
-  <div fxLayout="row">
-    <button (click)="start()" *ngIf="!started" color="accent" mat-raised-button>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <button (click)="start()" [disabled]="started" color="accent" mat-button>
       <mat-icon>play_arrow</mat-icon>
+      START
     </button>
-    <button (click)="stop()" *ngIf="started" color="warn" mat-raised-button>
-      <mat-icon>stop</mat-icon>
+    <button (click)="reset()" mat-button>
+      <mat-icon>replay</mat-icon>
+      RESET
+    </button>
+    <button (click)="pause()" [disabled]="!started" color="warn" mat-button>
+      <mat-icon>pause</mat-icon>
+      PAUSE
     </button>
   </div>
 </div>

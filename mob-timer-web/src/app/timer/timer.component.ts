@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { interval, Subscription } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-timer',
@@ -9,7 +9,7 @@ import { map, take } from 'rxjs/operators';
   styleUrls: ['./timer.component.scss']
 })
 export class TimerComponent implements OnInit {
-  counter: moment.Duration = moment.duration(0);
+  counter: moment.Duration = moment.duration(20, 'seconds');
 
   subscription: Subscription;
 
@@ -18,8 +18,12 @@ export class TimerComponent implements OnInit {
   start() {
     this.subscription = interval(1000)
       .pipe(
-        take(this.counter.asSeconds()),
-        map(_ => this.counter.add(-1, 'seconds'))
+        map(_ => this.counter.add(-1, 'seconds')),
+        tap(_ => {
+          if (this.counter.asSeconds() === 0) {
+            this.pause();
+          }
+        })
       )
       .subscribe();
   }
@@ -28,9 +32,29 @@ export class TimerComponent implements OnInit {
     return !!this.subscription;
   }
 
-  stop() {
+  reset() {
+    this.pause();
+    this.counter = moment.duration(20, 'seconds');
+  }
+
+  incrementSeconds() {
+    this.counter.add(10, 'seconds');
+  }
+
+  decrementSeconds() {
+    this.counter.add(-10, 'seconds');
+  }
+
+  incrementMinutes() {
+    this.counter.add(1, 'minutes');
+  }
+
+  decrementMinutes() {
+    this.counter.add(-1, 'minutes');
+  }
+
+  pause() {
     this.subscription.unsubscribe();
     this.subscription = null;
-    this.counter = moment.duration(20, 'seconds');
   }
 }
