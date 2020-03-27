@@ -10,6 +10,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsModule } from '@ngxs/store';
 import { environment } from 'src/environments/environment';
@@ -38,7 +39,9 @@ import { TimerComponent } from './timer/timer.component';
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
-    MatRadioModule
+    MatRadioModule,
+
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [],
   bootstrap: [AppComponent]
