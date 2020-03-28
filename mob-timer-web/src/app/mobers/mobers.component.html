@@ -1,4 +1,4 @@
-<div class="wrapper" fxLayout="column">
+<div class="container" fxLayout="column">
   <div>
     <mat-form-field [formGroup]="form">
       <mat-label>Mober name</mat-label>
@@ -8,7 +8,7 @@
       <mat-icon>add</mat-icon>
     </button>
   </div>
-  <mat-list>
+  <mat-list class="content scrollbar">
     <mat-list-item *ngFor="let mober of mobers$ | async">
       <mat-radio-button [checked]="mober === selection" [value]="mober" (change)="selectMober(mober)" fxFlex="1 1 auto">
         {{ mober }}
