@@ -3,7 +3,7 @@ import { Store } from '@ngxs/store';
 import * as moment from 'moment';
 import { interval, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { SetDefaultTimer, TimerState } from '../app.store';
+import { SetDefaultTimer, TimerState, TimeUp } from '../app.store';
 
 @Component({
   selector: 'app-timer',
@@ -26,6 +26,8 @@ export class TimerComponent implements OnInit {
   }
 
   start() {
+    Notification.requestPermission();
+
     if (this.subscription === null) {
       this.store.dispatch(new SetDefaultTimer(this.counter));
     }
@@ -34,8 +36,8 @@ export class TimerComponent implements OnInit {
         map(_ => this.counter.add(-1, 'seconds')),
         tap(_ => {
           this.checkMinDate();
-          if (this.counter.asSeconds() <= 0) {
-            this.pause();
+          if (this.counter.asSeconds() === 0) {
+            this.timersUp();
           }
         })
       )
@@ -80,5 +82,10 @@ export class TimerComponent implements OnInit {
   decrementMinutes() {
     this.counter.add(-1, 'minutes');
     this.checkMinDate();
+  }
+
+  timersUp() {
+    this.reset();
+    this.store.dispatch(new TimeUp());
   }
 }

@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import * as moment from 'moment';
 
@@ -33,10 +34,19 @@ export class SetDefaultTimer {
   constructor(public readonly timer: moment.Duration) {}
 }
 
+export class TimeUp {
+  static readonly type = '[Timer] TimeUp]';
+}
+
+export class SetNextMober {
+  static readonly type = '[Timer] SetNextMober]';
+}
+
 @State<TimerStateModel>({
   name: 'timer',
   defaults: DEFAULT
 })
+@Injectable()
 export class TimerState {
   @Selector()
   public static mobers(state: TimerStateModel) {
@@ -90,5 +100,35 @@ export class TimerState {
   @Action(SetDefaultTimer)
   public setDefaultTimer(ctx: StateContext<TimerStateModel>, { timer }: SetDefaultTimer) {
     ctx.patchState({ defaultTimer: timer.clone() });
+  }
+
+  @Action(TimeUp)
+  public timeUp(ctx: StateContext<TimerStateModel>) {
+    const nextMober = this.getNextMober(ctx);
+    new Notification(`Time is up`, {
+      body: `Next mober ${nextMober ? `'${nextMober}' ` : ''}to play!`,
+      icon: 'assets/icons/icon-128x128.png',
+      dir: 'auto',
+      vibrate: [100, 50, 100],
+      timestamp: 3000
+    });
+    return ctx.dispatch(new SetNextMober());
+  }
+
+  private getNextMober(ctx: StateContext<TimerStateModel>) {
+    if (ctx.getState().mobers.length > 0) {
+      const actualMober = ctx.getState().selectedMober;
+      const actualIndex = ctx.getState().mobers.indexOf(actualMober);
+      if (actualIndex >= 0 && actualIndex < ctx.getState().mobers.length - 1) {
+        return ctx.getState().mobers[actualIndex + 1];
+      }
+      return ctx.getState().mobers[0];
+    }
+    return undefined;
+  }
+
+  @Action(SetNextMober)
+  public setNext(ctx: StateContext<TimerStateModel>) {
+    ctx.patchState({ selectedMober: this.getNextMober(ctx) });
   }
 }
