@@ -13,7 +13,7 @@ import { SetDefaultTimer, TimerState } from '../app.store';
 export class TimerComponent implements OnInit {
   counter: moment.Duration = moment.duration(0);
 
-  subscription: Subscription;
+  subscription: Subscription = null;
 
   constructor(private store: Store) {}
 
@@ -26,14 +26,15 @@ export class TimerComponent implements OnInit {
   }
 
   start() {
-    if (!this.started) {
+    if (this.subscription === null) {
       this.store.dispatch(new SetDefaultTimer(this.counter));
     }
     this.subscription = interval(1000)
       .pipe(
         map(_ => this.counter.add(-1, 'seconds')),
         tap(_ => {
-          if (this.counter.asSeconds() === 0) {
+          this.checkMinDate();
+          if (this.counter.asSeconds() <= 0) {
             this.pause();
           }
         })
@@ -57,12 +58,19 @@ export class TimerComponent implements OnInit {
     return !!this.subscription && !this.subscription.closed;
   }
 
+  private checkMinDate() {
+    if (this.counter.asSeconds() < 0) {
+      this.counter = moment.duration(0);
+    }
+  }
+
   incrementSeconds() {
     this.counter.add(10, 'seconds');
   }
 
   decrementSeconds() {
     this.counter.add(-10, 'seconds');
+    this.checkMinDate();
   }
 
   incrementMinutes() {
@@ -71,5 +79,6 @@ export class TimerComponent implements OnInit {
 
   decrementMinutes() {
     this.counter.add(-1, 'minutes');
+    this.checkMinDate();
   }
 }
