@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -11,7 +11,7 @@ import { AddMober, RemoveMober, SelectMober, TimerState } from '../app.store';
   styleUrls: ['./mobers.component.scss']
 })
 export class MobersComponent implements OnInit {
-  form = this.fb.group({ name: ['', Validators.required] });
+  form = this.fb.group({ name: [''] });
 
   @Select(TimerState.mobers)
   mobers$: Observable<string[]>;
@@ -28,7 +28,9 @@ export class MobersComponent implements OnInit {
   }
 
   addMober() {
-    this.store.dispatch(new AddMober(this.form.value.name)).subscribe(() => this.form.patchValue({ name: '' }));
+    if (this.form.value.name) {
+      this.store.dispatch(new AddMober(this.form.value.name)).subscribe(() => this.form.patchValue({ name: '' }));
+    }
   }
 
   removeMober(mober: string) {

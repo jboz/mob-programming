@@ -1,21 +1,11 @@
-<div class="container">
-  <mat-toolbar color="primary" class="mat-elevation-z8">
-    <span fxFlex="1 1 auto">Timer for mob programming</span>
-    <button (click)="clearState()" title="Delete all data" mat-icon-button>
-      <mat-icon>clear_all</mat-icon>
-    </button>
-  </mat-toolbar>
+<mat-toolbar color="primary" class="mat-elevation-z8">
+  <span fxFlex="1 1 auto">Timer for mob programming</span>
+  <button (click)="clearState()" title="Delete all data" mat-icon-button>
+    <mat-icon>clear_all</mat-icon>
+  </button>
+</mat-toolbar>
 
-  <div
-    class="content container"
-    fxLayout="row"
-    fxLayoutAlign="space-around center"
-    fxLayout.lt-sm="column"
-    fxLayoutAlign.lt-sm="center center"
-    fxLayoutGap.lt-sm="3em"
-    fxFlexFill
-  >
-    <app-timer></app-timer>
-    <app-mobers class="content"></app-mobers>
-  </div>
+<div fxLayout="row" fxLayoutAlign="space-around center" fxLayout.lt-sm="column" fxFlexFill>
+  <app-timer></app-timer>
+  <app-mobers></app-mobers>
 </div>
