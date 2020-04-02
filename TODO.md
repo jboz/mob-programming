@@ -1,0 +1,36 @@
+# TODO :
+
+- timer
+  - web app
+    - [ ] icon
+    - [x] color
+    - [x] fonts
+    - [ ] web section timer
+      - [ ] easy to set time
+      - [x] start
+      - [x] stop
+      - [ ] reset
+      - [ ] pause
+    - [ ] deploy on cloud
+    - [ ] ci intégration
+    - [x] web section specified users
+    - [ ] web notification timer's up
+    - [ ] this notification indicate next user if many
+    - [ ] sound on timer's up
+    - [ ] can change sound
+    - [ ] can change timer looks
+    - [ ] keyboard shortcut
+    - [ ] sort mobers
+    - [ ] timer on new windows, over others ?
+  - command line
+    - [ ] timer
+    - [ ] specified users
+    - [ ] sound timer's up
+    - [ ] message next user
+    - [ ] sound on timer's up
+- README, static site, FR/EN
+  - [ ] principe
+  - [ ] avantages
+  - [ ] inconvénients
+  - [ ] pattern driver
+  - [ ] tools

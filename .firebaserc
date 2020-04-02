@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "mob-programming-x": {
+      "hosting": {
+        "timer": [
+          "timer-mob-programming"
+        ]
+      }
+    }
+  }
+}
