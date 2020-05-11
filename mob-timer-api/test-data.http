@@ -1,0 +1,35 @@
+###
+
+GET http://127.0.0.1:8080/mob-programming/api/mobs/DreamTeam
+
+###
+
+POST http://127.0.0.1:8080/mob-programming/api/mobs HTTP/1.1
+content-type: application/json
+
+{
+  "id": "DreamTeam",
+  "duration": 15,
+  "mobers": ["Joe", "Jimi", "Elisa"]
+}
+
+###
+
+PUT http://127.0.0.1:8080/mob-programming/api/mobs/DreamTeam HTTP/1.1
+content-type: application/json
+
+{
+  "id": "DreamTeam",
+  "duration": 15,
+  "round": {
+    "timerStartTimestamp": "16:55",
+    "started": true
+  },
+  "mobers": ["Joe", "Jimi", "Elisa"]
+}
+
+###
+
+GET http://127.0.0.1:8080/mob-programming/api/mobs
+
+###
