@@ -2,26 +2,26 @@
 
 - timer
   - web app
-    - [ ] icon
+    - [x] icon
     - [x] color
     - [x] fonts
     - [ ] web section timer
-      - [ ] easy to set time
+      - [x] easy to set time
       - [x] start
       - [x] stop
-      - [ ] reset
-      - [ ] pause
-    - [ ] deploy on cloud
+      - [x] reset
+      - [x] pause
+    - [x] deploy on cloud
     - [ ] ci intégration
     - [x] web section specified users
-    - [ ] web notification timer's up
-    - [ ] this notification indicate next user if many
+    - [x] web notification timer's up
+    - [x] this notification indicate next user if many
     - [ ] sound on timer's up
     - [ ] can change sound
     - [ ] can change timer looks
     - [ ] keyboard shortcut
     - [ ] sort mobers
-    - [ ] timer on new windows, over others ?
+    - [ ] timer on separate/standalone windows, over others ?
   - command line
     - [ ] timer
     - [ ] specified users
