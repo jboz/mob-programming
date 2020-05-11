@@ -105,6 +105,7 @@ export class TimerState {
   @Action(TimeUp)
   public timeUp(ctx: StateContext<TimerStateModel>) {
     const nextMober = this.getNextMober(ctx);
+    // tslint:disable-next-line: no-unused-expression
     new Notification(`Time is up`, {
       body: `Next mober ${nextMober ? `'${nextMober}' ` : ''}to play!`,
       icon: 'assets/icons/icon-128x128.png',

@@ -17,11 +17,12 @@ import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TimerState } from './app.store';
+import { ConnectedTimerComponent } from './connected-timer/connected-timer.component';
 import { MobersComponent } from './mobers/mobers.component';
 import { TimerComponent } from './timer/timer.component';
 
 @NgModule({
-  declarations: [AppComponent, TimerComponent, MobersComponent],
+  declarations: [AppComponent, TimerComponent, ConnectedTimerComponent, MobersComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
