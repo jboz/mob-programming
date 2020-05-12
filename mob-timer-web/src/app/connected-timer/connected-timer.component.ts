@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import * as moment from 'moment';
-import { BehaviorSubject, interval, Subject } from 'rxjs';
+import { interval, Observable, Subject } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
-import { TimeUp } from '../app.store';
+import { Connect, TimerState, TimeUp } from '../app.store';
 
 @Component({
   selector: 'app-connected-timer',
@@ -14,9 +14,10 @@ export class ConnectedTimerComponent implements OnInit {
   counter: moment.Duration;
   started = false;
 
+  @Select(TimerState.started)
+  started$: Observable<boolean>;
+
   private startTimestamp$ = new Subject<moment.Moment>();
-  private started$ = new Subject<boolean>();
-  private duration$ = new BehaviorSubject<moment.Duration>(moment.duration(12, 'minutes'));
 
   constructor(private store: Store) {}
 
@@ -32,7 +33,7 @@ export class ConnectedTimerComponent implements OnInit {
       )
       .subscribe();
 
-    this.duration$.subscribe(duration => (this.counter = duration));
+    this.store.select(TimerState.duration).subscribe(duration => (this.counter = duration));
 
     this.started$.subscribe(flag => (this.started = flag));
 
@@ -50,8 +51,8 @@ export class ConnectedTimerComponent implements OnInit {
       .subscribe();
   }
 
-  setTimestamp(hours: number, minutes: number) {
-    this.startTimestamp$.next(moment().set('hours', hours).set('minutes', minutes));
+  connect(idMob: string) {
+    this.store.dispatch(new Connect(idMob));
   }
 
   timersUp() {
@@ -60,20 +61,20 @@ export class ConnectedTimerComponent implements OnInit {
   }
 
   start() {
-    this.started$.next(true);
+    // this.started$.next(true);
   }
 
   pause() {
-    this.started$.next(false);
+    // this.started$.next(false);
   }
 
   resume() {
-    this.started$.next(true);
+    // this.started$.next(true);
   }
 
   reset() {
-    this.duration$.next(moment.duration(15, 'minutes'));
-    this.started$.next(false);
+    // this.duration$.next(moment.duration(15, 'minutes'));
+    // this.started$.next(false);
   }
 
   private checkMinDate() {

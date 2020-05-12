@@ -1,14 +1,10 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10vw">
   <div fxLayoutGap="20px">
     <mat-form-field>
-      <mat-label>Hours</mat-label>
-      <input #hours matInput />
+      <mat-label>Connect to mob</mat-label>
+      <input #idMob matInput />
     </mat-form-field>
-    <mat-form-field>
-      <mat-label>Minutes</mat-label>
-      <input #minutes matInput />
-    </mat-form-field>
-    <button (click)="setTimestamp(hours.value, minutes.value)" mat-raised-button>Set timestamp</button>
+    <button (click)="connect(idMob.value)" mat-raised-button>Connect</button>
   </div>
   <div class="counter">
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">

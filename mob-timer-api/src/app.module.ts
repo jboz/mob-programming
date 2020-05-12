@@ -6,6 +6,6 @@ export const API_PREFIX = '/mob-programming/api';
 @Module({
   imports: [MobsModule],
   controllers: [],
-  providers: [],
+  providers: []
 })
 export class AppModule {}

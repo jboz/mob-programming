@@ -7,14 +7,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
+const ServerSentEvent_middleware_1 = require("../middleware/ServerSentEvent.middleware");
 const mobs_controller_1 = require("./mobs.controller");
 let MobsModule = class MobsModule {
+    configure(consumer) {
+        consumer.apply(ServerSentEvent_middleware_1.ServerSentEventMiddleware).forRoutes({ path: 'mobs', method: common_1.RequestMethod.GET });
+    }
 };
 MobsModule = __decorate([
     common_1.Module({
         imports: [],
         controllers: [mobs_controller_1.MobsController],
-        providers: [],
+        providers: []
     })
 ], MobsModule);
 exports.MobsModule = MobsModule;

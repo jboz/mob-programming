@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { produce } from 'immer';
 import * as moment from 'moment';
+import { tap } from 'rxjs/operators';
+import { Mob } from './mobs.model';
+import { MobsService } from './mobs.service';
 
-const DEFAULT: TimerStateModel = { mobers: [], defaultTimer: moment.duration(15, 'minutes') };
+const DEFAULT: Mob = { id: 'MOB_LOCAL', mobers: [], duration: moment.duration(12, 'minutes').asMinutes() };
 
 export interface TimerStateModel {
-  mobers: string[];
-  selectedMober?: string;
-  defaultTimer: moment.Duration;
+  mob: Mob;
 }
 
 export class AddMober {
@@ -42,64 +44,90 @@ export class SetNextMober {
   static readonly type = '[Timer] SetNextMober]';
 }
 
+export class Connect {
+  static readonly type = '[Timer] Connect]';
+  constructor(public readonly idMod?: any) {}
+}
+
 @State<TimerStateModel>({
   name: 'timer',
-  defaults: DEFAULT
+  defaults: { mob: DEFAULT }
 })
 @Injectable()
 export class TimerState {
   @Selector()
   public static mobers(state: TimerStateModel) {
-    return state.mobers;
+    return state.mob.mobers;
   }
 
   @Selector()
   public static selectedMober(state: TimerStateModel) {
-    return state.selectedMober;
+    return state.mob.round.currentMober;
   }
 
   @Selector()
-  public static defaultTimer(state: TimerStateModel) {
-    return moment.duration(state.defaultTimer);
+  public static duration(state: TimerStateModel) {
+    return moment.duration(state.mob.duration, 'minutes');
   }
+
+  @Selector()
+  public static started(state: TimerStateModel): boolean {
+    return state.mob.round.started;
+  }
+
+  @Selector()
+  public static timerStartTimestamp(state: TimerStateModel): moment.Moment {
+    return moment(state.mob.round.timerStartTimestamp);
+  }
+
+  @Selector()
+  public static timerPauseTimestamp(state: TimerStateModel): moment.Moment {
+    return moment(state.mob.round.timerPauseTimestamp);
+  }
+
+  constructor(private mobsService: MobsService) {}
 
   @Action(AddMober)
   public add(ctx: StateContext<TimerStateModel>, { mober }: AddMober) {
-    ctx.patchState({ mobers: [...ctx.getState().mobers, mober] });
-    this.autoSelection(ctx);
+    // ctx.patchState({ mobers: [...ctx.getState().mobers, mober] });
+    // this.autoSelection(ctx);
   }
 
   @Action(RemoveMober)
   public remove(ctx: StateContext<TimerStateModel>, { mober }: RemoveMober) {
-    ctx.patchState({ mobers: [...ctx.getState().mobers.filter(name => name !== mober)] });
-    if (ctx.getState().selectedMober === mober) {
-      ctx.patchState({ selectedMober: undefined });
-      if (ctx.getState().mobers.length > 0) {
-        ctx.patchState({ selectedMober: ctx.getState().mobers[0] });
-      }
-    }
-    this.autoSelection(ctx);
+    // ctx.patchState({ mobers: [...ctx.getState().mobers.filter(name => name !== mober)] });
+    // if (ctx.getState().selectedMober === mober) {
+    //   ctx.patchState({ selectedMober: undefined });
+    //   if (ctx.getState().mobers.length > 0) {
+    //     ctx.patchState({ selectedMober: ctx.getState().mobers[0] });
+    //   }
+    // }
+    // this.autoSelection(ctx);
   }
 
   @Action(SelectMober)
   public select(ctx: StateContext<TimerStateModel>, { mober }: SelectMober) {
-    ctx.patchState({ selectedMober: mober });
+    // ctx.patchState({ selectedMober: mober });
   }
 
   private autoSelection(ctx: StateContext<TimerStateModel>) {
-    if (ctx.getState().mobers.length === 1) {
-      ctx.patchState({ selectedMober: ctx.getState().mobers[0] });
-    }
+    // if (ctx.getState().mobers.length === 1) {
+    //   ctx.patchState({ selectedMober: ctx.getState().mobers[0] });
+    // }
   }
 
   @Action(ClearState)
   public clear(ctx: StateContext<TimerStateModel>) {
-    ctx.setState({ ...DEFAULT, defaultTimer: ctx.getState().defaultTimer });
+    ctx.setState({ mob: DEFAULT });
   }
 
   @Action(SetDefaultTimer)
   public setDefaultTimer(ctx: StateContext<TimerStateModel>, { timer }: SetDefaultTimer) {
-    ctx.patchState({ defaultTimer: timer.clone() });
+    ctx.setState(
+      produce(draft => {
+        draft.mob.duration = timer.asMinutes();
+      })
+    );
   }
 
   @Action(TimeUp)
@@ -117,19 +145,28 @@ export class TimerState {
   }
 
   private getNextMober(ctx: StateContext<TimerStateModel>) {
-    if (ctx.getState().mobers.length > 0) {
-      const actualMober = ctx.getState().selectedMober;
-      const actualIndex = ctx.getState().mobers.indexOf(actualMober);
-      if (actualIndex >= 0 && actualIndex < ctx.getState().mobers.length - 1) {
-        return ctx.getState().mobers[actualIndex + 1];
+    if (ctx.getState().mob.mobers.length > 0) {
+      const actualMober = ctx.getState().mob.round.currentMober;
+      const actualIndex = ctx.getState().mob.mobers.indexOf(actualMober);
+      if (actualIndex >= 0 && actualIndex < ctx.getState().mob.mobers.length - 1) {
+        return ctx.getState().mob.mobers[actualIndex + 1];
       }
-      return ctx.getState().mobers[0];
+      return ctx.getState().mob.mobers[0];
     }
     return undefined;
   }
 
   @Action(SetNextMober)
   public setNext(ctx: StateContext<TimerStateModel>) {
-    ctx.patchState({ selectedMober: this.getNextMober(ctx) });
+    ctx.setState(
+      produce(draft => {
+        draft.mob.round.currentMober = this.getNextMober(ctx);
+      })
+    );
+  }
+
+  @Action(Connect)
+  public connect(ctx: StateContext<TimerStateModel>, { idMod }: Connect) {
+    return this.mobsService.getMob$(idMod).pipe(tap(mob => ctx.patchState({ mob })));
   }
 }

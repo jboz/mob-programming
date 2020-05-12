@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, NotFoundException, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiParam } from '@nestjs/swagger';
 import { Observable, of } from 'rxjs';
 import { Mob } from './mobs.model';
@@ -9,7 +9,7 @@ export class MobsController {
 
   constructor() {
     this.repository['lesDaltons'] = {
-      id: 'FirstMob',
+      id: 'lesDaltons',
       duration: 10,
       mobers: ['Joe', 'Jack', 'William', 'Averell']
     };
@@ -49,5 +49,14 @@ export class MobsController {
       throw new NotFoundException(`Mob '${id}' not found`);
     }
     this.repository[id] = mob;
+  }
+
+  @Delete(':id')
+  @ApiParam({ name: 'id', description: 'Mob id' })
+  delete(@Param('id') id: string) {
+    if (this.repository[id] === undefined) {
+      throw new NotFoundException(`Mob '${id}' not found`);
+    }
+    delete this.repository[id];
   }
 }

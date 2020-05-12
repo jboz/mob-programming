@@ -20,7 +20,7 @@ let MobsController = class MobsController {
     constructor() {
         this.repository = {};
         this.repository['lesDaltons'] = {
-            id: 'FirstMob',
+            id: 'lesDaltons',
             duration: 10,
             mobers: ['Joe', 'Jack', 'William', 'Averell']
         };
@@ -45,6 +45,12 @@ let MobsController = class MobsController {
             throw new common_1.NotFoundException(`Mob '${id}' not found`);
         }
         this.repository[id] = mob;
+    }
+    delete(id) {
+        if (this.repository[id] === undefined) {
+            throw new common_1.NotFoundException(`Mob '${id}' not found`);
+        }
+        delete this.repository[id];
     }
 };
 __decorate([
@@ -81,6 +87,14 @@ __decorate([
     __metadata("design:paramtypes", [String, mobs_model_1.Mob]),
     __metadata("design:returntype", void 0)
 ], MobsController.prototype, "updateMob", null);
+__decorate([
+    common_1.Delete(':id'),
+    swagger_1.ApiParam({ name: 'id', description: 'Mob id' }),
+    __param(0, common_1.Param('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], MobsController.prototype, "delete", null);
 MobsController = __decorate([
     common_1.Controller('mobs'),
     __metadata("design:paramtypes", [])

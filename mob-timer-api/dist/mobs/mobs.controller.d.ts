@@ -7,4 +7,5 @@ export declare class MobsController {
     findOne(id: string): Observable<Mob>;
     createMob(mob: Mob): void;
     updateMob(id: string, mob: Mob): void;
+    delete(id: string): void;
 }
