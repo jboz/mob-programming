@@ -1,39 +1,67 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Post, Put } from '@nestjs/common';
-import { ApiBody, ApiCreatedResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiParam } from '@nestjs/swagger';
-import { Observable, of } from 'rxjs';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  Res,
+  UnprocessableEntityException
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import {
+  ApiBody,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiParam,
+  ApiUnprocessableEntityResponse
+} from '@nestjs/swagger';
+import { Model } from 'mongoose';
+import { Response } from 'src/middleware/ServerSentEventResponse.type';
 import { Mob } from './mobs.model';
+import { MobDocument } from './schemas/mob.schema';
 
 @Controller('mobs')
 export class MobsController {
-  private repository: { [key: string]: Mob } = {};
-
-  constructor() {
-    this.repository['lesDaltons'] = {
-      id: 'lesDaltons',
-      duration: 10,
-      mobers: ['Joe', 'Jack', 'William', 'Averell']
-    };
-  }
+  constructor(@InjectModel(MobDocument.name) private readonly model: Model<MobDocument>) {}
 
   @Get()
-  findAll(): Observable<Mob[]> {
-    return of(Object.values(this.repository).filter(data => !!data.id));
+  findAll(@Res() response: Response) {
+    return this.model
+      .find()
+      .exec()
+      .then(data => response.sse.send(data));
   }
 
   @Get(':id')
   @ApiParam({ name: 'id', description: 'Mob id' })
-  findOne(@Param('id') id: string): Observable<Mob> {
-    if (this.repository[id] === undefined) {
-      throw new NotFoundException(`Mob '${id}' not found`);
-    }
-    return of(this.repository[id]);
+  findOne(@Param('id') id: string) {
+    return this.model.findById(id).then(existingMob => {
+      if (!existingMob) {
+        throw new NotFoundException(`Mob '${id}' not found.`);
+      }
+      return existingMob;
+    });
   }
 
   @Post()
-  @ApiCreatedResponse({ description: 'Mob created' })
   @ApiBody({ type: Mob })
+  @ApiCreatedResponse({ description: 'Mob created' })
+  @ApiUnprocessableEntityResponse({ description: 'Mob already exists' })
   createMob(@Body() mob: Mob) {
-    this.repository[mob.id] = mob;
+    return this.model
+      .findOne({ name: mob.name })
+      .exec()
+      .then(existingMob => {
+        if (existingMob) {
+          throw new UnprocessableEntityException(`Mob '${mob.name}' already exists.`);
+        }
+        return new this.model(mob).save();
+      });
   }
 
   @Put(':id')
@@ -42,21 +70,29 @@ export class MobsController {
   @ApiNoContentResponse({ description: 'Mob updated' })
   @ApiNotFoundResponse({ description: "Mob doesn't exists" })
   updateMob(@Param('id') id: string, @Body() mob: Mob) {
-    if (id !== mob.id) {
-      throw new BadRequestException(`Requested id doesn't match body id '${mob.id}'`);
-    }
-    if (this.repository[id] === undefined) {
-      throw new NotFoundException(`Mob '${id}' not found`);
-    }
-    this.repository[id] = mob;
+    return this.model
+      .findById(id)
+      .exec()
+      .then(existingMob => {
+        if (!existingMob) {
+          throw new NotFoundException(`Mob '${id}' not found.`);
+        }
+        return this.model.updateOne({ _id: id }, mob);
+      });
   }
 
   @Delete(':id')
   @ApiParam({ name: 'id', description: 'Mob id' })
+  @ApiNotFoundResponse({ description: "Mob doesn't exists" })
   delete(@Param('id') id: string) {
-    if (this.repository[id] === undefined) {
-      throw new NotFoundException(`Mob '${id}' not found`);
-    }
-    delete this.repository[id];
+    return this.model
+      .findById(id)
+      .exec()
+      .then(existingMob => {
+        if (!existingMob) {
+          throw new NotFoundException(`Mob '${id}' not found.`);
+        }
+        return this.model.deleteOne({ _id: id });
+      });
   }
 }

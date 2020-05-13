@@ -1,24 +1,24 @@
 ### GET MOB
 
-GET http://127.0.0.1:8080/mob-programming/api/mobs/DreamTeam
+GET http://127.0.0.1:8080/mob-programming/api/mobs/5ebb54acbd1027330663021a
 
 ### CREATE MOB
 POST http://127.0.0.1:8080/mob-programming/api/mobs HTTP/1.1
 content-type: application/json
 
 {
-  "id": "DreamTeam",
+  "name": "DreamTeam",
   "duration": 15,
   "mobers": ["Joe", "Jimi", "Elisa"]
 }
 
 ### START MOB
 
-PUT http://127.0.0.1:8080/mob-programming/api/mobs/DreamTeam HTTP/1.1
+PUT http://127.0.0.1:8080/mob-programming/api/mobs/5ebb54acbd1027330663021a HTTP/1.1
 content-type: application/json
 
 {
-  "id": "DreamTeam",
+  "name": "DreamTeam",
   "duration": 15,
   "round": {
     "timerStartTimestamp": "16:55",
@@ -30,10 +30,11 @@ content-type: application/json
 
 ### DELETE MOB
 
-DELETE http://127.0.0.1:8080/mob-programming/api/mobs/DreamTeam
+DELETE http://127.0.0.1:8080/mob-programming/api/mobs/5ebb54acbd1027330663021a
 
 ### LIST ALL MOBS
 
 GET http://127.0.0.1:8080/mob-programming/api/mobs
+Accept: text/event-stream
 
 ###

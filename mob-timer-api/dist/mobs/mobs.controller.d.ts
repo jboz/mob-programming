@@ -1,11 +1,18 @@
-import { Observable } from 'rxjs';
+import { Model } from 'mongoose';
+import { Response } from 'src/middleware/ServerSentEventResponse.type';
 import { Mob } from './mobs.model';
+import { MobDocument } from './schemas/mob.schema';
 export declare class MobsController {
-    private repository;
-    constructor();
-    findAll(): Observable<Mob[]>;
-    findOne(id: string): Observable<Mob>;
-    createMob(mob: Mob): void;
-    updateMob(id: string, mob: Mob): void;
-    delete(id: string): void;
+    private readonly model;
+    constructor(model: Model<MobDocument>);
+    findAll(response: Response): Promise<void>;
+    findOne(id: string): Promise<MobDocument>;
+    createMob(mob: Mob): Promise<MobDocument>;
+    updateMob(id: string, mob: Mob): Promise<any>;
+    delete(id: string): Promise<{
+        ok?: number;
+        n?: number;
+    } & {
+        deletedCount?: number;
+    }>;
 }

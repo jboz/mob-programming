@@ -7,8 +7,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
+const mongoose_1 = require("@nestjs/mongoose");
 const ServerSentEvent_middleware_1 = require("../middleware/ServerSentEvent.middleware");
 const mobs_controller_1 = require("./mobs.controller");
+const mob_schema_1 = require("./schemas/mob.schema");
 let MobsModule = class MobsModule {
     configure(consumer) {
         consumer.apply(ServerSentEvent_middleware_1.ServerSentEventMiddleware).forRoutes({ path: 'mobs', method: common_1.RequestMethod.GET });
@@ -16,7 +18,7 @@ let MobsModule = class MobsModule {
 };
 MobsModule = __decorate([
     common_1.Module({
-        imports: [],
+        imports: [mongoose_1.MongooseModule.forFeature([{ name: mob_schema_1.MobDocument.name, schema: mob_schema_1.MobSchema }])],
         controllers: [mobs_controller_1.MobsController],
         providers: []
     })

@@ -1,9 +1,11 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ServerSentEventMiddleware } from 'src/middleware/ServerSentEvent.middleware';
 import { MobsController } from './mobs.controller';
+import { MobDocument, MobSchema } from './schemas/mob.schema';
 
 @Module({
-  imports: [],
+  imports: [MongooseModule.forFeature([{ name: MobDocument.name, schema: MobSchema }])],
   controllers: [MobsController],
   providers: []
 })

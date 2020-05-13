@@ -18,7 +18,7 @@ export class MobRound {
 export class Mob {
   @IsNotEmpty()
   @ApiProperty()
-  id: string;
+  name: string;
 
   @ApiProperty()
   @IsPositive()
