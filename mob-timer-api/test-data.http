@@ -30,11 +30,15 @@ content-type: application/json
 
 ### DELETE MOB
 
-DELETE http://127.0.0.1:8080/mob-programming/api/mobs/7fcf9b19-cc18-4a09-8acb-0bed22ddf3e3
+DELETE http://127.0.0.1:8080/mob-programming/api/mobs/1efedd27-98be-46ce-9073-c86f388c7e68
 
 ### LIST ALL MOBS
 
 GET http://127.0.0.1:8080/mob-programming/api/mobs
+
+### TAIL MOBS
+
+GET http://127.0.0.1:8080/mob-programming/api/mobs/tail/DreamTeam
 Accept: text/event-stream
 
 ###

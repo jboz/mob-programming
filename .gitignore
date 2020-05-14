@@ -66,3 +66,5 @@ node_modules/
 
 dist
 data-db
+.gradle
+
