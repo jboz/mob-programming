@@ -16,3 +16,7 @@ logging:
         web:
           filter:
             CommonsRequestLoggingFilter: DEBUG
+        data:
+          mongodb:
+            core:
+              ReactiveMongoTemplate: DEBUG

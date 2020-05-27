@@ -12,13 +12,13 @@ class CollectionConfiguration @Autowired constructor(private val reactiveMongoTe
     @PostConstruct
     fun setUpCollection() {
         reactiveMongoTemplate.collectionExists("mob")
-                .thenEmpty {
-                    reactiveMongoTemplate
-                            .createCollection("mob", CollectionOptions.empty()
-                                    .capped()
-                                    .size(2048)
-                                    .maxDocuments(10000))
-                }
+                .filter { exists -> exists }
+                .switchIfEmpty(reactiveMongoTemplate.createCollection("mob", CollectionOptions.empty()
+                        .capped()
+                        .size(2048)
+                        .maxDocuments(10000))
+                        .map { _ -> true }
+                )
                 .subscribe()
     }
 }
