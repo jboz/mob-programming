@@ -6,7 +6,7 @@ export interface MobRound {
 }
 
 export interface Mob {
-  id: string;
+  name: string;
   duration: number;
   round?: MobRound;
   mobers: string[];

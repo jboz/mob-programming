@@ -1,10 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10vw">
   <div fxLayoutGap="20px">
     <mat-form-field>
-      <mat-label>Connect to mob</mat-label>
-      <input #idMob matInput />
+      <mat-label>Se connecter au mob</mat-label>
+      <input #mobName matInput />
     </mat-form-field>
-    <button (click)="connect(idMob.value)" mat-raised-button>Connect</button>
+    <button (click)="connect(mobName.value)" mat-raised-button>Se connecter</button>
+    <div *ngFor="let mob of mobs$ | async">{{ mob.name }}</div>
   </div>
   <div class="counter">
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">

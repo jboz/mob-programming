@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { interval, Observable, Subject } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
 import { Connect, TimerState, TimeUp } from '../app.store';
+import { MobsService } from '../mobs.service';
 
 @Component({
   selector: 'app-connected-timer',
@@ -19,7 +20,9 @@ export class ConnectedTimerComponent implements OnInit {
 
   private startTimestamp$ = new Subject<moment.Moment>();
 
-  constructor(private store: Store) {}
+  mobs$ = this.mobService.mobs$();
+
+  constructor(private store: Store, private mobService: MobsService) {}
 
   ngOnInit(): void {
     this.startTimestamp$
@@ -51,8 +54,8 @@ export class ConnectedTimerComponent implements OnInit {
       .subscribe();
   }
 
-  connect(idMob: string) {
-    this.store.dispatch(new Connect(idMob));
+  connect(name: string) {
+    this.store.dispatch(new Connect(name));
   }
 
   timersUp() {

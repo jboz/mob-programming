@@ -7,9 +7,13 @@ import { Mob } from './mobs.model';
 export class MobsService {
   constructor(private httpClient: HttpClient) {}
 
-  getMob$(id: string): Observable<Mob> {
+  public mobs$(): Observable<Mob[]> {
+    return this.httpClient.get<Mob[]>('/mob-programming/api/mobs');
+  }
+
+  public mob$(name: string): Observable<Mob> {
     return new Observable(observer => {
-      const eventSource = new EventSource(`/mob-programming/api/mobs/${id}`);
+      const eventSource = new EventSource(`/mob-programming/api/mobs/tail/${name}`);
       eventSource.onmessage = event => observer.next(JSON.parse(event.data) as Mob);
       eventSource.onerror = error => {
         if (eventSource.readyState === 0) {

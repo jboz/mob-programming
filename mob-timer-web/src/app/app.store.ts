@@ -6,7 +6,7 @@ import { tap } from 'rxjs/operators';
 import { Mob } from './mobs.model';
 import { MobsService } from './mobs.service';
 
-const DEFAULT: Mob = { id: 'MOB_LOCAL', mobers: [], duration: moment.duration(12, 'minutes').asMinutes() };
+const DEFAULT: Mob = { name: 'MOB_LOCAL', mobers: [], duration: moment.duration(12, 'minutes').asMinutes() };
 
 export interface TimerStateModel {
   mob: Mob;
@@ -46,7 +46,7 @@ export class SetNextMober {
 
 export class Connect {
   static readonly type = '[Timer] Connect]';
-  constructor(public readonly idMod?: any) {}
+  constructor(public readonly name?: any) {}
 }
 
 @State<TimerStateModel>({
@@ -166,7 +166,10 @@ export class TimerState {
   }
 
   @Action(Connect)
-  public connect(ctx: StateContext<TimerStateModel>, { idMod }: Connect) {
-    return this.mobsService.getMob$(idMod).pipe(tap(mob => ctx.patchState({ mob })));
+  public connect(ctx: StateContext<TimerStateModel>, { name }: Connect) {
+    return this.mobsService.mob$(name).pipe(
+      tap(data => console.log(`data=${data}`)),
+      tap(mob => ctx.patchState({ mob }))
+    );
   }
 }
