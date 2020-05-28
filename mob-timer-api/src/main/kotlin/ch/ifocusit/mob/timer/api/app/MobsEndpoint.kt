@@ -33,5 +33,5 @@ class MobsEndpoint @Autowired constructor(private val repository: MobRepository)
     fun tailAll(): Flux<Mob> = repository.findWithTailableCursorBy()
 
     @GetMapping("/tail/{name}", produces = [TEXT_EVENT_STREAM_VALUE])
-    fun findByName(@PathVariable name: String): Mono<Mob> = repository.findFirstByName(name)
+    fun findByName(@PathVariable name: String): Mono<Mob> = repository.findLastByName(name)
 }

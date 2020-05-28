@@ -1,0 +1,14 @@
+.sts4-cache
+bin
+build/*
+!build/libs
+out
+gradle
+gradlew
+gradlew.bat
+.project
+.classpath
+.settings
+data.json
+target/*
+!target/profiles-api*.jar

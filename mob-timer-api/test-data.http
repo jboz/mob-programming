@@ -1,19 +1,19 @@
 ### GET MOB
 
-GET http://127.0.0.1:8080/mob-programming/api/mobs/b49326b5-beaf-46d8-971f-915ce9cac311
+GET {{timer-api}}/mob-programming/api/mobs/b49326b5-beaf-46d8-971f-915ce9cac311
 
 ### CREATE MOB
-POST http://127.0.0.1:8080/mob-programming/api/mobs HTTP/1.1
+POST {{timer-api}}/mob-programming/api/mobs HTTP/1.1
 content-type: application/json
 
 {
   "name": "DreamTeam",
-  "duration": 15,
+  "duration": 18,
   "mobers": ["Joe", "Jimi", "Elisa"]
 }
 
 ### CREATE MOB
-POST http://127.0.0.1:8080/mob-programming/api/mobs HTTP/1.1
+POST {{timer-api}}/mob-programming/api/mobs HTTP/1.1
 content-type: application/json
 
 {
@@ -24,7 +24,7 @@ content-type: application/json
 
 ### UPDATE MOB
 
-PUT http://127.0.0.1:8080/mob-programming/api/mobs/2dc17d4f-3c26-4404-befd-aa6013744d05
+PUT {{timer-api}}/mob-programming/api/mobs/2dc17d4f-3c26-4404-befd-aa6013744d05
 
 {
   "id": "2dc17d4f-3c26-4404-befd-aa6013744d05",
@@ -40,7 +40,7 @@ PUT http://127.0.0.1:8080/mob-programming/api/mobs/2dc17d4f-3c26-4404-befd-aa601
 
 ### START MOB
 
-PUT http://127.0.0.1:8080/mob-programming/api/mobs
+PUT {{timer-api}}/mob-programming/api/mobs
 
 {
   "name": "DreamTeam",
@@ -54,15 +54,15 @@ PUT http://127.0.0.1:8080/mob-programming/api/mobs
 
 ### DELETE MOB
 
-DELETE http://127.0.0.1:8080/mob-programming/api/mobs/2dc17d4f-3c26-4404-befd-aa6013744d05
+DELETE {{timer-api}}/mob-programming/api/mobs/2dc17d4f-3c26-4404-befd-aa6013744d05
 
 ### LIST ALL MOBS
 
-GET http://127.0.0.1:8080/mob-programming/api/mobs
+GET {{timer-api}}/mob-programming/api/mobs
 
 ### TAIL MOBS
 
-GET http://127.0.0.1:8080/mob-programming/api/mobs/tail/DreamTeam
+GET {{timer-api}}/mob-programming/api/mobs/tail/DreamTeam
 Accept: text/event-stream
 
 ###

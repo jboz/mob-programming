@@ -1,20 +1,57 @@
 version: "3.3"
 
 services:
-  mongo:
+  traefik:
+    image: traefik
+    command:
+      - "--log.level=warn"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      traefik.enable: true
+      traefik.http.routers.dashboard.rule: Host(`traefik.localhost`)
+      traefik.http.routers.dashboard.entrypoints: web
+      traefik.http.routers.dashboard.service: api@internal
+
+  mongodb:
     image: mongo
     volumes:
-      - ./data-db:/data/db
+      - mongodata:/data/db
     environment:
-      - MONGODB_DATABASE="data"
+      - MONGODB_DATABASE="mob-programming"
     ports:
       - 27017:27017
 
   mongo-express:
     image: mongo-express
     environment:
-      - ME_CONFIG_OPTIONS_EDITORTHEME="ambiance"
-      - ME_CONFIG_BASICAUTH_USERNAME="julien"
-      - ME_CONFIG_BASICAUTH_PASSWORD="\%cJm7:{#4B"+8jj"
-    ports:
-      - 8081:8081
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    labels:
+      traefik.enable: true
+      traefik.http.routers.express.rule: Host(`mongo.localhost`)
+      traefik.http.routers.express.entrypoints: web
+      traefik.http.services.express.loadbalancer.server.port: 8081
+    depends_on:
+      - mongodb
+
+  timer-api:
+    build:
+      context: ./mob-timer-api
+      dockerfile: Dockerfile
+    image: submarine.banan4.com/ifocusit/mob-timer-api:latest
+    labels:
+      traefik.enable: true
+      traefik.http.routers.timer-api.rule: Host(`mob.localhost`) && PathPrefix(`/mob-programming/api/`)
+      traefik.http.routers.timer-api.entrypoints: web
+      traefik.http.services.timer-api.loadbalancer.server.port: 8080
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodata:

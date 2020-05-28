@@ -10,7 +10,8 @@ import reactor.core.publisher.Mono
 @Repository
 interface MobRepository : ReactiveMongoRepository<Mob, String> {
     @Tailable
-    fun findFirstByName(name: String): Mono<Mob>
+    fun findLastByName(name: String): Mono<Mob>
+    // fun findFirstByNameOrderByCreationDateDesc(name: String): Mono<Mob>
 
     @Tailable
     fun findWithTailableCursorBy(): Flux<Mob>
