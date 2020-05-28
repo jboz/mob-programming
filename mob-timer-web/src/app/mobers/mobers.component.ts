@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AddMober, RemoveMober, SelectMober, TimerState } from '../app.store';
+import { AddMober, MobState, RemoveMober, SelectMober } from '../mob.store';
 
 @Component({
   selector: 'app-mobers',
@@ -13,7 +13,7 @@ import { AddMober, RemoveMober, SelectMober, TimerState } from '../app.store';
 export class MobersComponent implements OnInit {
   form = this.fb.group({ name: [''] });
 
-  @Select(TimerState.mobers)
+  @Select(MobState.mobers)
   mobers$: Observable<string[]>;
 
   selection: string;
@@ -22,7 +22,7 @@ export class MobersComponent implements OnInit {
 
   ngOnInit(): void {
     this.store
-      .select(TimerState.selectedMober)
+      .select(MobState.selectedMober)
       .pipe(tap(mober => (this.selection = mober)))
       .subscribe();
   }

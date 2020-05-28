@@ -1,5 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { AngularFireModule } from '@angular/fire';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,13 +18,12 @@ import { NgxsModule } from '@ngxs/store';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TimerState } from './app.store';
 import { ConnectedTimerComponent } from './connected-timer/connected-timer.component';
+import { MobState } from './mob.store';
 import { MobersComponent } from './mobers/mobers.component';
-import { TimerComponent } from './timer/timer.component';
 
 @NgModule({
-  declarations: [AppComponent, TimerComponent, ConnectedTimerComponent, MobersComponent],
+  declarations: [AppComponent, ConnectedTimerComponent, MobersComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -31,8 +31,10 @@ import { TimerComponent } from './timer/timer.component';
     ReactiveFormsModule,
     HttpClientModule,
 
-    NgxsModule.forRoot([TimerState], { developmentMode: !environment.production }),
+    NgxsModule.forRoot([MobState], { developmentMode: !environment.production }),
     NgxsStoragePluginModule.forRoot({ key: 'mob-timer' }),
+
+    AngularFireModule.initializeApp(environment.firebase),
 
     FlexLayoutModule,
 

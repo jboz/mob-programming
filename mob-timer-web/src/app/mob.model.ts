@@ -1,7 +1,11 @@
+export enum RoundStatus {
+  STARTED,
+  PAUSE
+}
+
 export interface MobRound {
-  timerStartTimestamp?: string;
-  started: boolean;
-  timerPauseTimestamp?: string;
+  status: RoundStatus;
+  instant?: string;
   currentMober?: string;
 }
 

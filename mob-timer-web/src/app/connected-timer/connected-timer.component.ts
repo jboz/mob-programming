@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import * as moment from 'moment';
-import { interval, Observable, Subject } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
-import { Connect, TimerState, TimeUp } from '../app.store';
-import { MobsService } from '../mobs.service';
+import { interval } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
+import { RoundStatus } from '../mob.model';
+import { MobState, TimeUp } from '../mob.store';
+import { TimerPause, TimerStart } from './../mob.store';
 
 @Component({
   selector: 'app-connected-timer',
@@ -15,30 +16,25 @@ export class ConnectedTimerComponent implements OnInit {
   counter: moment.Duration;
   started = false;
 
-  @Select(TimerState.started)
-  started$: Observable<boolean>;
-
-  private startTimestamp$ = new Subject<moment.Moment>();
-
-  mobs$ = this.mobService.mobs$();
-
-  constructor(private store: Store, private mobService: MobsService) {}
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.startTimestamp$
+    this.store
+      .select(MobState.mob)
       .pipe(
-        map(start => moment().diff(start, 'seconds')),
-        tap(data => console.log(`elapsedSeconds=${data}`)),
-        tap(elapsedSeconds => {
-          this.counter.add(elapsedSeconds * -1, 'seconds');
-          this.started = true;
+        tap(mob => {
+          if (mob.round && mob.round.status === RoundStatus.STARTED) {
+            this.counter = moment.duration(mob.round.instant);
+            this.started = true;
+          } else if (mob.round && mob.round.status === RoundStatus.PAUSE) {
+            this.started = false;
+            this.counter = moment.duration(mob.round.instant);
+          } else {
+            this.counter = moment.duration(mob.duration, 'minutes');
+          }
         })
       )
       .subscribe();
-
-    this.store.select(TimerState.duration).subscribe(duration => (this.counter = duration));
-
-    this.started$.subscribe(flag => (this.started = flag));
 
     interval(1000)
       .pipe(
@@ -54,25 +50,21 @@ export class ConnectedTimerComponent implements OnInit {
       .subscribe();
   }
 
-  connect(name: string) {
-    this.store.dispatch(new Connect(name));
-  }
-
   timersUp() {
     this.reset();
     this.store.dispatch(new TimeUp());
   }
 
   start() {
-    // this.started$.next(true);
+    this.store.dispatch(new TimerStart());
   }
 
   pause() {
-    // this.started$.next(false);
+    this.store.dispatch(new TimerPause(this.counter.clone()));
   }
 
   resume() {
-    // this.started$.next(true);
+    this.store.dispatch(new TimerStart());
   }
 
   reset() {
