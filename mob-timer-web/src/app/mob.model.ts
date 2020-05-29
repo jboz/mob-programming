@@ -1,3 +1,4 @@
+import { Duration, Moment } from 'moment';
 export enum RoundStatus {
   STARTED,
   PAUSE
@@ -5,14 +6,14 @@ export enum RoundStatus {
 
 export interface MobRound {
   status: RoundStatus;
-  instant?: string;
-  playTimestamp?: string;
+  instant?: Duration;
+  playTimestamp?: Moment;
   currentMober?: string;
 }
 
 export interface Mob {
   name: string;
-  duration: number;
+  duration: Duration;
   round?: MobRound;
   mobers: string[];
 }

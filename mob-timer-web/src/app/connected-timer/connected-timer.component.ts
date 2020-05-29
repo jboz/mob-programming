@@ -4,8 +4,8 @@ import * as moment from 'moment';
 import { interval } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { RoundStatus } from '../mob.model';
-import { MobState, TimeUp } from '../mob.store';
-import { TimerPause, TimerStart } from './../mob.store';
+import { MobState, TimerReset, TimeUp } from '../mob.store';
+import { TimerChange, TimerPause, TimerStart } from './../mob.store';
 
 @Component({
   selector: 'app-connected-timer',
@@ -51,6 +51,12 @@ export class ConnectedTimerComponent implements OnInit {
       .subscribe();
   }
 
+  private checkMinDate() {
+    if (this.counter.asSeconds() < 0) {
+      this.counter = moment.duration(0);
+    }
+  }
+
   timersUp() {
     this.reset();
     this.store.dispatch(new TimeUp());
@@ -69,31 +75,22 @@ export class ConnectedTimerComponent implements OnInit {
   }
 
   reset() {
-    // this.duration$.next(moment.duration(15, 'minutes'));
-    // this.started$.next(false);
-  }
-
-  private checkMinDate() {
-    if (this.counter.asSeconds() < 0) {
-      this.counter = moment.duration(0);
-    }
+    this.store.dispatch(new TimerReset());
   }
 
   incrementSeconds() {
-    this.counter.add(10, 'seconds');
+    this.store.dispatch(new TimerChange(10, 'seconds'));
   }
 
   decrementSeconds() {
-    this.counter.add(-10, 'seconds');
-    this.checkMinDate();
+    this.store.dispatch(new TimerChange(-10, 'seconds'));
   }
 
   incrementMinutes() {
-    this.counter.add(1, 'minutes');
+    this.store.dispatch(new TimerChange(10, 'minutes'));
   }
 
   decrementMinutes() {
-    this.counter.add(-1, 'minutes');
-    this.checkMinDate();
+    this.store.dispatch(new TimerChange(-1, 'minutes'));
   }
 }

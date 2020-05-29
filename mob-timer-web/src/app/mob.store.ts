@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
 import { Mob, MobRound, RoundStatus } from './mob.model';
 import { MobsService } from './mob.service';
 
-const DEFAULT: Mob = { name: '', mobers: [], duration: moment.duration(12, 'minutes').asMinutes() };
+const DEFAULT: Mob = { name: '', mobers: [], duration: moment.duration(15, 'minutes') };
 
 export interface MobStateModel {
   mob: Mob;
@@ -62,6 +62,15 @@ export class TimerStart {
 export class TimerPause {
   static readonly type = '[Mob] TimerPause]';
   constructor(public readonly instant: Duration) {}
+}
+
+export class TimerChange {
+  static readonly type = '[Mob] TimerChange]';
+  constructor(public readonly value: number, public readonly unit: moment.unitOfTime.DurationConstructor) {}
+}
+
+export class TimerReset {
+  static readonly type = '[Mob] TimerReset]';
 }
 
 @State<MobStateModel>({
@@ -185,7 +194,7 @@ export class MobState {
 
   @Action(TimerStart)
   timerStart(ctx: StateContext<MobStateModel>) {
-    let instant = moment.duration(ctx.getState().mob.duration, 'minutes').toISOString();
+    let instant = moment.duration(ctx.getState().mob.duration, 'minutes');
 
     if (ctx.getState().mob.round?.instant) {
       instant = ctx.getState().mob.round.instant;
@@ -193,7 +202,7 @@ export class MobState {
 
     const mob = {
       ...ctx.getState().mob,
-      round: { status: RoundStatus.STARTED, instant, playTimestamp: moment().toISOString() } as MobRound
+      round: { status: RoundStatus.STARTED, instant, playTimestamp: moment() } as MobRound
     };
     if (this.isConnectedMob(mob)) {
       return this.mobsService.save(mob);
@@ -205,11 +214,27 @@ export class MobState {
   timerPause(ctx: StateContext<MobStateModel>, { instant }: TimerPause) {
     const mob = {
       ...ctx.getState().mob,
-      round: { status: RoundStatus.PAUSE, instant: instant.toISOString() }
+      round: { status: RoundStatus.PAUSE, instant }
     };
     if (this.isConnectedMob(mob)) {
       return this.mobsService.save(mob);
     }
     return ctx.patchState({ mob });
   }
+
+  @Action(TimerChange)
+  timerChange(ctx: StateContext<MobStateModel>, { value, unit }: TimerChange) {
+    const mob = { ...ctx.getState().mob };
+    if (mob.round) {
+      mob.round.instant = mob.round.instant.add(value, unit);
+    } else {
+      mob.duration = mob.duration.add(value, unit);
+    }
+  }
+
+  // private checkMinDate() {
+  //   if (this.counter.asSeconds() < 0) {
+  //     this.counter = moment.duration(0);
+  //   }
+  // }
 }
