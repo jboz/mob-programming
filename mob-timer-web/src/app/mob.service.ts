@@ -21,6 +21,15 @@ interface MobEntity {
 export class MobsService {
   constructor(private db: AngularFirestore) {}
 
+  public static fromEntity(entity: MobEntity) {
+    const mob: any = { ...entity, duration: moment.duration(entity.duration) };
+    if (entity.round) {
+      mob.round.instant = moment.duration(entity.round.instant);
+      mob.round.playTimestamp = moment(entity.round.playTimestamp);
+    }
+    return mob;
+  }
+
   public mobs$(): Observable<Mob[]> {
     return this.db.collection<Mob>('/mobs').valueChanges();
   }
@@ -29,7 +38,7 @@ export class MobsService {
     return this.db
       .doc<MobEntity>(`/mobs/${name}`)
       .snapshotChanges()
-      .pipe(map(doc => this.fromEntity(doc.payload.data())));
+      .pipe(map(doc => MobsService.fromEntity(doc.payload.data())));
   }
 
   public save(mob: Mob): Promise<void> {
@@ -39,20 +48,12 @@ export class MobsService {
   private toEntity(mob: Mob): MobEntity {
     const entity: any = { ...mob, duration: mob.duration.toISOString() };
     if (mob.round) {
+      entity.round = { ...mob.round };
       entity.round.instant = mob.round.instant.toISOString();
       if (mob.round.playTimestamp) {
         entity.round.playTimestamp = mob.round.playTimestamp.toISOString();
       }
     }
     return entity;
-  }
-
-  private fromEntity(entity: MobEntity) {
-    const mob: any = { ...entity, duration: moment.duration(entity.duration) };
-    if (entity.round) {
-      mob.round.instant = moment.duration(entity.round.instant);
-      mob.round.playTimestamp = moment(entity.round.playTimestamp);
-    }
-    return mob;
   }
 }

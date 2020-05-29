@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { interval } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { RoundStatus } from '../mob.model';
-import { MobState, TimerReset, TimeUp } from '../mob.store';
+import { AutoConnect, MobState, TimerReset, TimeUp } from '../mob.store';
 import { TimerChange, TimerPause, TimerStart } from './../mob.store';
 
 @Component({
@@ -19,6 +19,7 @@ export class ConnectedTimerComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
+    this.store.dispatch(new AutoConnect());
     this.store
       .select(MobState.mob)
       .pipe(

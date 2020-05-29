@@ -73,6 +73,10 @@ export class TimerReset {
   static readonly type = '[Mob] TimerReset]';
 }
 
+export class AutoConnect {
+  static readonly type = '[Mob] AutoConnect]';
+}
+
 @State<MobStateModel>({
   name: 'mob',
   defaults: { mob: DEFAULT }
@@ -174,12 +178,17 @@ export class MobState {
     );
   }
 
+  @Action(AutoConnect)
+  public autoConnect(ctx: StateContext<MobStateModel>) {
+    const name = ctx.getState().mob.name;
+    if (name) {
+      return ctx.dispatch(new Connect(name));
+    }
+  }
+
   @Action(Connect)
   public connect(ctx: StateContext<MobStateModel>, { name }: Connect) {
-    return this.mobsService.mob$(name).pipe(
-      tap(data => console.log(`data=${data}`)),
-      tap(mob => ctx.patchState({ mob }))
-    );
+    return this.mobsService.mob$(name).pipe(tap(mob => ctx.patchState({ mob })));
   }
 
   @Action(Create)
@@ -194,8 +203,7 @@ export class MobState {
 
   @Action(TimerStart)
   timerStart(ctx: StateContext<MobStateModel>) {
-    let instant = moment.duration(ctx.getState().mob.duration, 'minutes');
-
+    let instant = ctx.getState().mob.duration;
     if (ctx.getState().mob.round?.instant) {
       instant = ctx.getState().mob.round.instant;
     }

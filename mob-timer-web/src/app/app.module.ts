@@ -19,6 +19,7 @@ import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConnectedTimerComponent } from './connected-timer/connected-timer.component';
+import { MobsService } from './mob.service';
 import { MobState } from './mob.store';
 import { MobersComponent } from './mobers/mobers.component';
 
@@ -32,7 +33,13 @@ import { MobersComponent } from './mobers/mobers.component';
     HttpClientModule,
 
     NgxsModule.forRoot([MobState], { developmentMode: !environment.production }),
-    NgxsStoragePluginModule.forRoot({ key: 'mob-timer' }),
+    NgxsStoragePluginModule.forRoot({
+      key: MobState,
+      deserialize: (json: string) => {
+        const item = JSON.parse(json);
+        return { ...item, mob: MobsService.fromEntity(item.mob) };
+      }
+    }),
 
     AngularFireModule.initializeApp(environment.firebase),
 
