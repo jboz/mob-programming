@@ -4,11 +4,10 @@ import { produce } from 'immer';
 import * as moment from 'moment';
 import { Duration } from 'moment';
 import { tap } from 'rxjs/operators';
-import { Mob, RoundStatus } from './mob.model';
+import { Mob, MobRound, RoundStatus } from './mob.model';
 import { MobsService } from './mob.service';
-import { MobRound } from './mobs.model';
 
-const DEFAULT: Mob = { name: 'MOB_LOCAL', mobers: [], duration: moment.duration(12, 'minutes').asMinutes() };
+const DEFAULT: Mob = { name: '', mobers: [], duration: moment.duration(12, 'minutes').asMinutes() };
 
 export interface MobStateModel {
   mob: Mob;
@@ -194,7 +193,7 @@ export class MobState {
 
     const mob = {
       ...ctx.getState().mob,
-      round: { status: RoundStatus.STARTED, instant } as MobRound
+      round: { status: RoundStatus.STARTED, instant, playTimestamp: moment().toISOString() } as MobRound
     };
     if (this.isConnectedMob(mob)) {
       return this.mobsService.save(mob);

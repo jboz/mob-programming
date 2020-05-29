@@ -6,6 +6,7 @@ export enum RoundStatus {
 export interface MobRound {
   status: RoundStatus;
   instant?: string;
+  playTimestamp?: string;
   currentMober?: string;
 }
 

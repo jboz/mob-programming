@@ -24,7 +24,8 @@ export class ConnectedTimerComponent implements OnInit {
       .pipe(
         tap(mob => {
           if (mob.round && mob.round.status === RoundStatus.STARTED) {
-            this.counter = moment.duration(mob.round.instant);
+            const elapsedSeconds = moment().diff(moment(mob.round.playTimestamp), 'seconds');
+            this.counter = moment.duration(mob.round.instant).add(-elapsedSeconds, 'seconds');
             this.started = true;
           } else if (mob.round && mob.round.status === RoundStatus.PAUSE) {
             this.started = false;
