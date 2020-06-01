@@ -24,8 +24,12 @@ export class MobsService {
   public static fromEntity(entity: MobEntity) {
     const mob: any = { ...entity, duration: moment.duration(entity.duration) };
     if (entity.round) {
-      mob.round.instant = moment.duration(entity.round.instant);
-      mob.round.playTimestamp = moment(entity.round.playTimestamp);
+      if (entity.round.instant) {
+        mob.round.instant = moment.duration(entity.round.instant);
+      }
+      if (entity.round.playTimestamp) {
+        mob.round.playTimestamp = moment(entity.round.playTimestamp);
+      }
     }
     return mob;
   }
@@ -49,7 +53,9 @@ export class MobsService {
     const entity: any = { ...mob, duration: mob.duration.toISOString() };
     if (mob.round) {
       entity.round = { ...mob.round };
-      entity.round.instant = mob.round.instant.toISOString();
+      if (mob.round.instant) {
+        entity.round.instant = mob.round.instant.toISOString();
+      }
       if (mob.round.playTimestamp) {
         entity.round.playTimestamp = mob.round.playTimestamp.toISOString();
       }

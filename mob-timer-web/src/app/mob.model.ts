@@ -1,7 +1,8 @@
 import { Duration, Moment } from 'moment';
 export enum RoundStatus {
   STARTED,
-  PAUSE
+  PAUSE,
+  STOPPED
 }
 
 export interface MobRound {

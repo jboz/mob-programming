@@ -4,7 +4,7 @@ import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Mob } from './mob.model';
 import { MobsService } from './mob.service';
-import { ClearState, Connect, Create, MobState } from './mob.store';
+import { ClearState, Connect, Create, MobState, TryToReConnect } from './mob.store';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
         }
       });
     }
+    this.store.dispatch(new TryToReConnect());
   }
 
   clearState() {

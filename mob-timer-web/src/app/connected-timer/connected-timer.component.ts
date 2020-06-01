@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import { interval } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { RoundStatus } from '../mob.model';
-import { AutoConnect, MobState, TimerReset, TimeUp } from '../mob.store';
+import { MobState, TimerReset, TimeUp } from '../mob.store';
 import { TimerChange, TimerPause, TimerStart } from './../mob.store';
 
 @Component({
@@ -19,7 +19,6 @@ export class ConnectedTimerComponent implements OnInit {
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.store.dispatch(new AutoConnect());
     this.store
       .select(MobState.mob)
       .pipe(
@@ -32,6 +31,7 @@ export class ConnectedTimerComponent implements OnInit {
             this.started = false;
             this.counter = mob.round.instant.clone();
           } else {
+            this.started = false;
             this.counter = mob.duration;
           }
         })
@@ -43,8 +43,9 @@ export class ConnectedTimerComponent implements OnInit {
         filter(() => this.started),
         tap(_ => this.counter.add(-1, 'seconds')),
         tap(_ => {
-          this.checkMinDate();
-          if (this.counter.asSeconds() === 0) {
+          if (this.counter.asSeconds() < 0) {
+            this.counter = moment.duration(0);
+            this.started = false;
             this.timersUp();
           }
         })
@@ -52,14 +53,7 @@ export class ConnectedTimerComponent implements OnInit {
       .subscribe();
   }
 
-  private checkMinDate() {
-    if (this.counter.asSeconds() < 0) {
-      this.counter = moment.duration(0);
-    }
-  }
-
   timersUp() {
-    this.reset();
     this.store.dispatch(new TimeUp());
   }
 
@@ -88,7 +82,7 @@ export class ConnectedTimerComponent implements OnInit {
   }
 
   incrementMinutes() {
-    this.store.dispatch(new TimerChange(10, 'minutes'));
+    this.store.dispatch(new TimerChange(1, 'minutes'));
   }
 
   decrementMinutes() {

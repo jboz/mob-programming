@@ -3,7 +3,7 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { produce } from 'immer';
 import * as moment from 'moment';
 import { Duration } from 'moment';
-import { tap } from 'rxjs/operators';
+import { mergeMap, tap } from 'rxjs/operators';
 import { Mob, MobRound, RoundStatus } from './mob.model';
 import { MobsService } from './mob.service';
 
@@ -73,7 +73,7 @@ export class TimerReset {
   static readonly type = '[Mob] TimerReset]';
 }
 
-export class AutoConnect {
+export class TryToReConnect {
   static readonly type = '[Mob] AutoConnect]';
 }
 
@@ -102,31 +102,39 @@ export class MobState {
 
   @Action(AddMober)
   public add(ctx: StateContext<MobStateModel>, { mober }: AddMober) {
-    // ctx.patchState({ mobers: [...ctx.getState().mobers, mober] });
-    // this.autoSelection(ctx);
+    const state = produce(ctx.getState(), draft => {
+      draft.mob.mobers.push(mober);
+      this.autoSelection(draft.mob);
+    });
+    return this.saveOrPatch(ctx, state.mob);
   }
 
   @Action(RemoveMober)
   public remove(ctx: StateContext<MobStateModel>, { mober }: RemoveMober) {
-    // ctx.patchState({ mobers: [...ctx.getState().mobers.filter(name => name !== mober)] });
-    // if (ctx.getState().selectedMober === mober) {
-    //   ctx.patchState({ selectedMober: undefined });
-    //   if (ctx.getState().mobers.length > 0) {
-    //     ctx.patchState({ selectedMober: ctx.getState().mobers[0] });
-    //   }
-    // }
-    // this.autoSelection(ctx);
+    const state = produce(ctx.getState(), draft => {
+      draft.mob.mobers = [...draft.mob.mobers.filter(name => name !== mober)];
+      this.autoSelection(draft.mob);
+    });
+    return this.saveOrPatch(ctx, state.mob);
   }
 
   @Action(SelectMober)
   public select(ctx: StateContext<MobStateModel>, { mober }: SelectMober) {
-    // ctx.patchState({ selectedMober: mober });
+    const state = produce(ctx.getState(), draft => {
+      draft.mob.round = { ...draft.mob.round, currentMober: mober };
+    });
+    return this.saveOrPatch(ctx, state.mob);
   }
 
-  private autoSelection(ctx: StateContext<MobStateModel>) {
-    // if (ctx.getState().mobers.length === 1) {
-    //   ctx.patchState({ selectedMober: ctx.getState().mobers[0] });
-    // }
+  private autoSelection(mob: Mob) {
+    if (!mob.mobers || mob.mobers.length === 0) {
+      delete mob.round;
+    } else if (
+      mob.mobers.length === 1 ||
+      (mob.mobers.length > 1 && (!mob.round || !mob.round.currentMober || !mob.mobers.includes(mob.round.currentMober)))
+    ) {
+      mob.round = { ...mob.round, currentMober: mob.mobers[0] };
+    }
   }
 
   @Action(ClearState)
@@ -136,16 +144,15 @@ export class MobState {
 
   @Action(SetDefaultTimer)
   public setDefaultTimer(ctx: StateContext<MobStateModel>, { timer }: SetDefaultTimer) {
-    ctx.setState(
-      produce(draft => {
-        draft.mob.duration = timer.asMinutes();
-      })
-    );
+    const state = produce(ctx.getState(), draft => {
+      draft.mob.duration = timer.clone();
+    });
+    return this.saveOrPatch(ctx, state.mob);
   }
 
   @Action(TimeUp)
   public timeUp(ctx: StateContext<MobStateModel>) {
-    const nextMober = this.getNextMober(ctx);
+    const nextMober = this.getNextMober(ctx.getState().mob);
     // tslint:disable-next-line: no-unused-expression
     new Notification(`Time is up`, {
       body: `Next mober ${nextMober ? `'${nextMober}' ` : ''}to play!`,
@@ -154,32 +161,33 @@ export class MobState {
       vibrate: [100, 50, 100],
       timestamp: 3000
     });
-    return ctx.dispatch(new SetNextMober());
+    return ctx.dispatch(new TimerReset()).pipe(mergeMap(_ => ctx.dispatch(new SetNextMober())));
   }
 
-  private getNextMober(ctx: StateContext<MobStateModel>) {
-    if (ctx.getState().mob.mobers.length > 0) {
-      const actualMober = ctx.getState().mob.round.currentMober;
-      const actualIndex = ctx.getState().mob.mobers.indexOf(actualMober);
-      if (actualIndex >= 0 && actualIndex < ctx.getState().mob.mobers.length - 1) {
-        return ctx.getState().mob.mobers[actualIndex + 1];
+  private getNextMober(mob: Mob) {
+    if (mob.mobers.length > 0) {
+      if (mob.round) {
+        const actualMober = mob.round.currentMober;
+        const actualIndex = mob.mobers.indexOf(actualMober);
+        if (actualIndex >= 0 && actualIndex < mob.mobers.length - 1) {
+          return mob.mobers[actualIndex + 1];
+        }
       }
-      return ctx.getState().mob.mobers[0];
+      return mob.mobers[0];
     }
     return undefined;
   }
 
   @Action(SetNextMober)
   public setNext(ctx: StateContext<MobStateModel>) {
-    ctx.setState(
-      produce(draft => {
-        draft.mob.round.currentMober = this.getNextMober(ctx);
-      })
-    );
+    const state = produce(ctx.getState(), draft => {
+      draft.mob.round.currentMober = this.getNextMober(draft.mob);
+    });
+    return this.saveOrPatch(ctx, state.mob);
   }
 
-  @Action(AutoConnect)
-  public autoConnect(ctx: StateContext<MobStateModel>) {
+  @Action(TryToReConnect)
+  public tryToReConnect(ctx: StateContext<MobStateModel>) {
     const name = ctx.getState().mob.name;
     if (name) {
       return ctx.dispatch(new Connect(name));
@@ -210,39 +218,53 @@ export class MobState {
 
     const mob = {
       ...ctx.getState().mob,
-      round: { status: RoundStatus.STARTED, instant, playTimestamp: moment() } as MobRound
+      round: { ...ctx.getState().mob.round, status: RoundStatus.STARTED, instant, playTimestamp: moment() } as MobRound
     };
-    if (this.isConnectedMob(mob)) {
-      return this.mobsService.save(mob);
-    }
-    return ctx.patchState({ mob });
+    return this.saveOrPatch(ctx, mob);
   }
 
   @Action(TimerPause)
   timerPause(ctx: StateContext<MobStateModel>, { instant }: TimerPause) {
     const mob = {
       ...ctx.getState().mob,
-      round: { status: RoundStatus.PAUSE, instant }
+      round: { ...ctx.getState().mob.round, status: RoundStatus.PAUSE, instant }
     };
-    if (this.isConnectedMob(mob)) {
-      return this.mobsService.save(mob);
-    }
-    return ctx.patchState({ mob });
+    return this.saveOrPatch(ctx, mob);
   }
 
   @Action(TimerChange)
   timerChange(ctx: StateContext<MobStateModel>, { value, unit }: TimerChange) {
     const mob = { ...ctx.getState().mob };
-    if (mob.round) {
-      mob.round.instant = mob.round.instant.add(value, unit);
+    if (mob.round && mob.round.instant) {
+      mob.round = { ...mob.round };
+      mob.round.instant = mob.round.instant.clone().add(value, unit);
+      if (mob.round.instant.asSeconds() < 0) {
+        mob.round.instant = moment.duration(0);
+      }
     } else {
-      mob.duration = mob.duration.add(value, unit);
+      mob.duration = mob.duration.clone().add(value, unit);
+      if (mob.duration.asSeconds() < 0) {
+        mob.duration = moment.duration(0);
+      }
     }
+    return this.saveOrPatch(ctx, mob);
   }
 
-  // private checkMinDate() {
-  //   if (this.counter.asSeconds() < 0) {
-  //     this.counter = moment.duration(0);
-  //   }
-  // }
+  @Action(TimerReset)
+  timerReset(ctx: StateContext<MobStateModel>) {
+    const mob = { ...ctx.getState().mob, round: { ...ctx.getState().mob.round } };
+    if (mob.round) {
+      delete mob.round.instant;
+      delete mob.round.playTimestamp;
+      mob.round.status = RoundStatus.STOPPED;
+    }
+    return this.saveOrPatch(ctx, mob);
+  }
+
+  private saveOrPatch(ctx: StateContext<MobStateModel>, mob: Mob) {
+    if (this.isConnectedMob(mob)) {
+      return this.mobsService.save(mob);
+    }
+    return ctx.patchState({ mob });
+  }
 }
