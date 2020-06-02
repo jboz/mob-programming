@@ -10,7 +10,7 @@ import { Create } from './../mob.store';
     <div mat-dialog-content>
       <mat-form-field>
         <mat-label>Mob name</mat-label>
-        <input #newMobName matInput />
+        <input #newMobName matInput autocomplete="off" autofocus (keyup.enter)="create(newMobName.value)" />
       </mat-form-field>
     </div>
     <mat-dialog-actions align="end">

@@ -10,7 +10,7 @@ import { Connect } from '../mob.store';
     <div mat-dialog-content>
       <mat-form-field>
         <mat-label>Name</mat-label>
-        <input #mobName matInput />
+        <input #mobName matInput autofocus (keyup.enter)="connect(mobName.value)" />
       </mat-form-field>
     </div>
     <mat-dialog-actions align="end">
