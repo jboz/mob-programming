@@ -13,8 +13,8 @@ jobs:
       appName: mob-timer
     steps:
     - uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
+      with:
+        fetch-depth: 2
     - name: Check changes
       run: |
         GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- '${{ env.appName }}' | tr -d '[:space:]')
