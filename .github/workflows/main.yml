@@ -12,26 +12,26 @@ jobs:
     env:
       appName: mob-timer
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 2
-    - name: Check changes
-      run: |
-        GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- '${{ env.appName }}' | tr -d '[:space:]')
-        if [ "$GITDIFF" == "" ]; then
-          echo "No code changes, skipped"
-          exit 0
-        fi
-        echo "${{ env.appName }} will be build and published"
-    - uses: actions/setup-node@master
-      with:
-        node-version: '12.x'
-    - run: |
-      cd ${{ env.appName }}
-      npm install
-      npm run build
-    - uses: w9jds/firebase-action@master
-      with:
-        args: deploy --only hosting
-      env:
-        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - name: Check changes
+        run: |
+          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- '${{ env.appName }}' | tr -d '[:space:]')
+          if [ "$GITDIFF" == "" ]; then
+            echo "No code changes, skipped"
+            exit 0
+          fi
+          echo "${{ env.appName }} will be build and published"
+      - uses: actions/setup-node@master
+        with:
+          node-version: "12.x"
+      - run: |
+          cd ${{ env.appName }}
+          npm install
+          npm run build
+      - uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
