@@ -1,0 +1,19 @@
+<div fxLayout="column" fxFlexFill>
+  <div>
+    <mat-form-field [formGroup]="form">
+      <mat-label>Mober name</mat-label>
+      <input matInput formControlName="name" autocomplete="off" autofocus (keyup.enter)="addMober()" />
+    </mat-form-field>
+    <button (click)="addMober()" color="primary" mat-icon-button>
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <mat-list fxFlex="1 1 auto" class="scrollbar">
+    <mat-list-item *ngFor="let mober of mobers$ | async">
+      <mat-radio-button [checked]="mober === selection" [value]="mober" (change)="selectMober(mober)" fxFlex="1 1 auto">
+        {{ mober }}
+      </mat-radio-button>
+      <button (click)="removeMober(mober)" mat-icon-button><mat-icon>delete</mat-icon></button>
+    </mat-list-item>
+  </mat-list>
+</div>
