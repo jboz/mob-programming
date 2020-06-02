@@ -21,7 +21,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConnectDialogComponent } from './connect-dialog/connect-dialog.component';
 import { DisconnectDialogComponent } from './disconnect-dialog/disconnect-dialog.component';
-import { ErrorsHandlingModule } from './error-handling/errors-handling.module';
 import { MobsService } from './mob.service';
 import { MobState } from './mob.store';
 import { MobersComponent } from './mobers/mobers.component';
@@ -49,8 +48,6 @@ import { TimerComponent } from './timer/timer.component';
     AngularFireModule.initializeApp(environment.firebase),
 
     FlexLayoutModule,
-
-    ErrorsHandlingModule,
 
     MatIconModule,
     MatButtonModule,
