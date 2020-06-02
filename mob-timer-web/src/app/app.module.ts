@@ -20,6 +20,7 @@ import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ConnectDialogComponent } from './connect-dialog/connect-dialog.component';
+import { CreateDialogComponent } from './create-dialog/create-dialog.component';
 import { DisconnectDialogComponent } from './disconnect-dialog/disconnect-dialog.component';
 import { MobsService } from './mob.service';
 import { MobState } from './mob.store';
@@ -27,7 +28,7 @@ import { MobersComponent } from './mobers/mobers.component';
 import { TimerComponent } from './timer/timer.component';
 
 @NgModule({
-  declarations: [AppComponent, TimerComponent, MobersComponent, ConnectDialogComponent, DisconnectDialogComponent],
+  declarations: [AppComponent, TimerComponent, MobersComponent, ConnectDialogComponent, DisconnectDialogComponent, CreateDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

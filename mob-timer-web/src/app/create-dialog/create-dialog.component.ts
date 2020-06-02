@@ -9,7 +9,7 @@ import { Create } from './../mob.store';
     <h1 mat-dialog-title>Create a mob session</h1>
     <div mat-dialog-content>
       <mat-form-field>
-        <mat-label>Mob session name</mat-label>
+        <mat-label>Mob name</mat-label>
         <input #newMobName matInput />
       </mat-form-field>
     </div>

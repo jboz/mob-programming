@@ -4,6 +4,7 @@ import { SwUpdate } from '@angular/service-worker';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { ConnectDialogComponent } from './connect-dialog/connect-dialog.component';
+import { CreateDialogComponent } from './create-dialog/create-dialog.component';
 import { DisconnectDialogComponent } from './disconnect-dialog/disconnect-dialog.component';
 import { Mob } from './mob.model';
 import { MobState, TryToReConnect } from './mob.store';
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit {
   }
 
   showCreateDialog() {
-    this.dialog.open(ConnectDialogComponent, {
+    this.dialog.open(CreateDialogComponent, {
       width: '350px'
     });
   }
