@@ -3,7 +3,8 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { produce } from 'immer';
 import * as moment from 'moment';
 import { Duration } from 'moment';
-import { mergeMap, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { mergeMap, takeWhile, tap } from 'rxjs/operators';
 import { Mob, MobRound, RoundStatus } from './mob.model';
 import { MobsService } from './mob.service';
 
@@ -26,10 +27,6 @@ export class RemoveMober {
 export class SelectMober {
   static readonly type = '[Mob] SelectMober]';
   constructor(public readonly mober: string) {}
-}
-
-export class ClearState {
-  static readonly type = '[Mob] ClearState]';
 }
 
 export class SetDefaultTimer {
@@ -77,12 +74,18 @@ export class TryToReConnect {
   static readonly type = '[Mob] AutoConnect]';
 }
 
+export class Disconnect {
+  static readonly type = '[Mob] Disconnect]';
+}
+
 @State<MobStateModel>({
   name: 'mob',
   defaults: { mob: DEFAULT }
 })
 @Injectable()
 export class MobState {
+  private subscription: Subscription;
+
   @Selector()
   public static mob(state: MobStateModel) {
     return state.mob;
@@ -135,11 +138,6 @@ export class MobState {
     ) {
       mob.round = { ...mob.round, currentMober: mob.mobers[0] };
     }
-  }
-
-  @Action(ClearState)
-  public clear(ctx: StateContext<MobStateModel>) {
-    ctx.setState({ mob: DEFAULT });
   }
 
   @Action(SetDefaultTimer)
@@ -196,7 +194,22 @@ export class MobState {
 
   @Action(Connect)
   public connect(ctx: StateContext<MobStateModel>, { name }: Connect) {
-    return this.mobsService.mob$(name).pipe(tap(mob => ctx.patchState({ mob })));
+    this.subscription = this.mobsService
+      .mob$(name)
+      .pipe(
+        tap(mob => ctx.patchState({ mob })),
+        takeWhile(() => !!ctx.getState().mob.name)
+      )
+      .subscribe();
+  }
+
+  @Action(Disconnect)
+  public disconnect(ctx: StateContext<MobStateModel>) {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+      delete this.subscription;
+    }
+    ctx.patchState({ mob: { ...ctx.getState().mob, name: DEFAULT.name } });
   }
 
   @Action(Create)

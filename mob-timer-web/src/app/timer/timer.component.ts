@@ -4,15 +4,14 @@ import * as moment from 'moment';
 import { interval } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { RoundStatus } from '../mob.model';
-import { MobState, TimerReset, TimeUp } from '../mob.store';
-import { TimerChange, TimerPause, TimerStart } from './../mob.store';
+import { MobState, TimerChange, TimerPause, TimerReset, TimerStart, TimeUp } from '../mob.store';
 
 @Component({
-  selector: 'app-connected-timer',
-  templateUrl: './connected-timer.component.html',
-  styleUrls: ['./connected-timer.component.scss']
+  selector: 'app-timer',
+  templateUrl: './timer.component.html',
+  styleUrls: ['./timer.component.scss']
 })
-export class ConnectedTimerComponent implements OnInit {
+export class TimerComponent implements OnInit {
   counter: moment.Duration;
   started = false;
 

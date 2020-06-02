@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { SwUpdate } from '@angular/service-worker';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { ConnectDialogComponent } from './connect-dialog/connect-dialog.component';
+import { DisconnectDialogComponent } from './disconnect-dialog/disconnect-dialog.component';
 import { Mob } from './mob.model';
-import { MobsService } from './mob.service';
-import { ClearState, Connect, Create, MobState, TryToReConnect } from './mob.store';
+import { MobState, TryToReConnect } from './mob.store';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +17,7 @@ export class AppComponent implements OnInit {
   @Select(MobState.mob)
   mob$: Observable<Mob>;
 
-  mobs$ = this.mobService.mobs$();
-
-  constructor(private store: Store, private swUpdate: SwUpdate, private mobService: MobsService) {}
+  constructor(private store: Store, private swUpdate: SwUpdate, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     if (this.swUpdate.isEnabled) {
@@ -30,15 +30,21 @@ export class AppComponent implements OnInit {
     this.store.dispatch(new TryToReConnect());
   }
 
-  clearState() {
-    this.store.dispatch(new ClearState());
+  showConnectDialog() {
+    this.dialog.open(ConnectDialogComponent, {
+      width: '350px'
+    });
   }
 
-  connect(name: string) {
-    this.store.dispatch(new Connect(name));
+  showDisconnectDialog() {
+    this.dialog.open(DisconnectDialogComponent, {
+      width: '370px'
+    });
   }
 
-  create(name: string) {
-    this.store.dispatch(new Create(name));
+  showCreateDialog() {
+    this.dialog.open(ConnectDialogComponent, {
+      width: '350px'
+    });
   }
 }

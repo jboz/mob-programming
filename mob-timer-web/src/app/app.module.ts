@@ -4,6 +4,7 @@ import { AngularFireModule } from '@angular/fire';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -18,19 +19,23 @@ import { NgxsModule } from '@ngxs/store';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ConnectedTimerComponent } from './connected-timer/connected-timer.component';
+import { ConnectDialogComponent } from './connect-dialog/connect-dialog.component';
+import { DisconnectDialogComponent } from './disconnect-dialog/disconnect-dialog.component';
+import { ErrorsHandlingModule } from './error-handling/errors-handling.module';
 import { MobsService } from './mob.service';
 import { MobState } from './mob.store';
 import { MobersComponent } from './mobers/mobers.component';
+import { TimerComponent } from './timer/timer.component';
 
 @NgModule({
-  declarations: [AppComponent, ConnectedTimerComponent, MobersComponent],
+  declarations: [AppComponent, TimerComponent, MobersComponent, ConnectDialogComponent, DisconnectDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MatDialogModule,
 
     NgxsModule.forRoot([MobState], { developmentMode: !environment.production }),
     NgxsStoragePluginModule.forRoot({
@@ -44,6 +49,8 @@ import { MobersComponent } from './mobers/mobers.component';
     AngularFireModule.initializeApp(environment.firebase),
 
     FlexLayoutModule,
+
+    ErrorsHandlingModule,
 
     MatIconModule,
     MatButtonModule,

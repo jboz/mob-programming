@@ -1,29 +1,21 @@
 <mat-toolbar color="primary" class="mat-elevation-z8">
   <span fxFlex="1 1 auto">Timer for mob programming</span>
-  <button (click)="clearState()" title="Delete all data" mat-icon-button>
-    <mat-icon>clear_all</mat-icon>
+
+  <button *ngIf="!(mob$ | async).name" (click)="showConnectDialog()" title="Connect" mat-icon-button>
+    <mat-icon>cloud_off</mat-icon>
+  </button>
+  <button *ngIf="(mob$ | async).name" (click)="showDisconnectDialog()" title="Disconnect" mat-icon-button>
+    <mat-icon>cloud_done</mat-icon>
+  </button>
+  <button *ngIf="!(mob$ | async).name" (click)="showCreateDialog()" title="Create" mat-icon-button>
+    <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
 
 <div class="main" fxLayout="column" fxLayoutAlign="center center" fxFlexFill>
-  <div fxLayoutGap="20px" style="width: 100%;">
-    <mat-form-field>
-      <mat-label>Créer un mob</mat-label>
-      <input #newMobName matInput />
-    </mat-form-field>
-    <button (click)="create(newMobName.value)" mat-raised-button>Créer</button>
-  </div>
-  <div fxLayoutGap="20px" style="width: 100%;">
-    <mat-form-field>
-      <mat-label>Se connecter au mob</mat-label>
-      <input #mobName matInput />
-    </mat-form-field>
-    <button (click)="connect(mobName.value)" mat-raised-button>Se connecter</button>
-    <div *ngFor="let mob of mobs$ | async">{{ mob.name }}</div>
-  </div>
   <h1>{{ (mob$ | async).name }}</h1>
   <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="space-around center" fxLayout.lt-sm="column" fxFlexFill class="scrollbar">
-    <app-connected-timer></app-connected-timer>
+    <app-timer></app-timer>
     <app-mobers></app-mobers>
   </div>
 </div>
