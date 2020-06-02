@@ -5,7 +5,7 @@
     - [x] icon
     - [x] color
     - [x] fonts
-    - [ ] web section timer
+    - [x] web section timer
       - [x] easy to set time
       - [x] start
       - [x] stop
@@ -16,6 +16,8 @@
     - [x] web section specified users
     - [x] web notification timer's up
     - [x] this notification indicate next user if many
+    - [x] interconnection between mobers on the same session
+    - [ ] translation FR/EN
     - [ ] sound on timer's up
     - [ ] can change sound
     - [ ] can change timer looks
