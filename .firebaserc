@@ -1,8 +1,11 @@
 {
+  "projects": {
+    "default": "mob-programming-x"
+  },
   "targets": {
     "mob-programming-x": {
       "hosting": {
-        "timer": [
+        "mob-timer": [
           "timer-mob-programming"
         ]
       }

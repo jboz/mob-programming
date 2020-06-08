@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import { Duration } from 'moment';
 import { Subscription } from 'rxjs';
 import { mergeMap, takeWhile, tap } from 'rxjs/operators';
+import { NotificationService } from '../notification.service';
 import { Mob, MobRound, RoundStatus } from './mob.model';
 import { MobsService } from './mob.service';
 
@@ -101,7 +102,7 @@ export class MobState {
     return state.mob.round.currentMober;
   }
 
-  constructor(private mobsService: MobsService) {}
+  constructor(private mobsService: MobsService, private notificationService: NotificationService) {}
 
   @Action(AddMober)
   public add(ctx: StateContext<MobStateModel>, { mober }: AddMober) {
@@ -151,14 +152,7 @@ export class MobState {
   @Action(TimeUp)
   public timeUp(ctx: StateContext<MobStateModel>) {
     const nextMober = this.getNextMober(ctx.getState().mob);
-    // tslint:disable-next-line: no-unused-expression
-    new Notification(`Time is up`, {
-      body: `Next mober ${nextMober ? `'${nextMober}' ` : ''}to play!`,
-      icon: 'assets/icons/icon-128x128.png',
-      dir: 'auto',
-      vibrate: [100, 50, 100],
-      timestamp: 3000
-    });
+    this.notificationService.notify(nextMober);
     return ctx.dispatch(new TimerReset()).pipe(mergeMap(_ => ctx.dispatch(new SetNextMober())));
   }
 

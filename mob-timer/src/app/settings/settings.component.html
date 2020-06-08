@@ -1,0 +1,15 @@
+<div fxLayout="column" fxFlexFill>
+  <mat-toolbar color="primary" class="mat-elevation-z8">
+    <a [routerLink]="['/']" mat-icon-button><mat-icon>keyboard_backspace</mat-icon></a>
+    <span fxFlex="1 1 auto">Settings</span>
+  </mat-toolbar>
+  <mat-list>
+    <div mat-subheader>Select a notification sound:</div>
+    <mat-list-item *ngFor="let sound of sounds$ | async" fxLayout="row" fxLayoutAlign="start center">
+      <app-audio-preview [sound]="sound"></app-audio-preview>
+      <mat-radio-button [checked]="selection.fileName === sound.fileName" [value]="sound.fileName" (change)="selectSound(sound)">
+        {{ sound.label }}
+      </mat-radio-button>
+    </mat-list-item>
+  </mat-list>
+</div>

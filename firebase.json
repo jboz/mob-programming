@@ -1,9 +1,9 @@
 {
   "hosting": [
     {
-      "target": "timer",
+      "target": "mob-timer",
       "site": "timer-mob-programming",
-      "public": "mob-timer-web/dist",
+      "public": "mob-timer/dist",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {

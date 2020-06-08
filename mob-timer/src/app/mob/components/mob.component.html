@@ -1,0 +1,31 @@
+<div fxLayout="column" fxFlexFill>
+  <mat-toolbar color="primary" class="mat-elevation-z8">
+    <span fxFlex="1 1 auto">{{ (mob$ | async).name || 'Mob programming' }}</span>
+
+    <button *ngIf="!(mob$ | async).name" (click)="showConnectDialog()" title="Connect" mat-icon-button>
+      <mat-icon>cloud_off</mat-icon>
+    </button>
+    <button *ngIf="(mob$ | async).name" (click)="showDisconnectDialog()" title="Disconnect" mat-icon-button>
+      <mat-icon>cloud_done</mat-icon>
+    </button>
+    <button *ngIf="!(mob$ | async).name" (click)="showCreateDialog()" title="Create" mat-icon-button>
+      <mat-icon>add</mat-icon>
+    </button>
+    <button [routerLink]="['/settings']" title="Settings" mat-icon-button>
+      <mat-icon>settings</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <div
+    class="main"
+    fxFlex="1 1 auto"
+    fxLayout="row"
+    fxLayoutAlign="space-around center"
+    fxLayout.lt-sm="column"
+    fxLayoutAlign.lt-sm="space-between center"
+    fxLayoutGap.lt-sm="3em"
+  >
+    <app-timer></app-timer>
+    <app-mobers></app-mobers>
+  </div>
+</div>
