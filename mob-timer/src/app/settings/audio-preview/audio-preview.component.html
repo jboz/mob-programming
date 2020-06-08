@@ -1,0 +1,8 @@
+<button (click)="play()" *ngIf="!playing" mat-icon-button>
+  <mat-icon>play_arrow</mat-icon>
+</button>
+<button (click)="pause()" *ngIf="playing" mat-icon-button><mat-icon>pause</mat-icon></button>
+<audio #audio preload="metadata">
+  <source [src]="path(sound.file)" type="audio/ogg" />
+  Your browser does not support the audio element.
+</audio>

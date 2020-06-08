@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { AddMober, MobState, RemoveMober, SelectMober } from '../mob.store';
+import { AddMober, MobState, RemoveMober, SelectMober } from '../../mob.store';
 
 @Component({
   selector: 'app-mobers',

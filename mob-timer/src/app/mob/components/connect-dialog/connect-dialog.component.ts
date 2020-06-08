@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngxs/store';
-import { Connect } from '../mob.store';
+import { Connect } from '../../mob.store';
 
 @Component({
   selector: 'app-connect-dialog',

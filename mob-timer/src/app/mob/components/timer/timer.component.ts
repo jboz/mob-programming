@@ -3,8 +3,8 @@ import { Store } from '@ngxs/store';
 import * as moment from 'moment';
 import { interval } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
-import { RoundStatus } from '../mob.model';
-import { MobState, TimerChange, TimerPause, TimerReset, TimerStart, TimeUp } from '../mob.store';
+import { RoundStatus } from '../../mob.model';
+import { MobState, TimerChange, TimerPause, TimerReset, TimerStart, TimeUp } from '../../mob.store';
 
 @Component({
   selector: 'app-timer',

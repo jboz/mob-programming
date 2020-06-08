@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngxs/store';
-import { Create } from './../mob.store';
+import { Create } from '../../mob.store';
 
 @Component({
   selector: 'app-crate-dialog',

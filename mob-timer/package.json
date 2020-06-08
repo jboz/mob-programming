@@ -7,7 +7,7 @@
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "deploy": "firebase deploy --only hosting:timer"
+    "deploy": "firebase deploy --only hosting:mob-timer"
   },
   "private": true,
   "dependencies": {
