@@ -4,11 +4,12 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
-import { SettingsComponent } from './settings.component';
 import { AudioPreviewComponent } from './audio-preview/audio-preview.component';
+import { SettingsComponent } from './settings.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { AudioPreviewComponent } from './audio-preview/audio-preview.component';
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
-    MatRadioModule
+    MatRadioModule,
+    MatProgressSpinnerModule
   ],
   exports: [RouterModule],
   declarations: [SettingsComponent, AudioPreviewComponent],

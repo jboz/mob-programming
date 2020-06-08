@@ -5,9 +5,9 @@ import * as moment from 'moment';
 import { Duration } from 'moment';
 import { Subscription } from 'rxjs';
 import { mergeMap, takeWhile, tap } from 'rxjs/operators';
+import { NotificationService } from '../notification.service';
 import { Mob, MobRound, RoundStatus } from './mob.model';
 import { MobsService } from './mob.service';
-import { NotificationService } from './notification.service';
 
 const DEFAULT: Mob = { name: '', mobers: [], duration: moment.duration(15, 'minutes') };
 

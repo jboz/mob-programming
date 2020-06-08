@@ -5,17 +5,10 @@
   </mat-toolbar>
   <mat-list>
     <div mat-subheader>Select a notification sound:</div>
-    <mat-list-item *ngFor="let sound of sounds">
-      <button (click)="audio.play()" *ngIf="audio.pause || audio.ended || audio.currentTime === 0" mat-icon-button>
-        <mat-icon>play_arrow</mat-icon>
-      </button>
-      <button (click)="audio.pause()" *ngIf="audio.currentTime > 0 && !audio.pause" mat-icon-button><mat-icon>pause</mat-icon></button>
-      <audio #audio preload="metadata">
-        <source [src]="path(sound.file)" type="audio/ogg" />
-        Your browser does not support the audio element.
-      </audio>
-      <mat-radio-button [checked]="sound.file === selection" [value]="sound.file" (change)="selectSound(sound.file)" fxFlex="1 1 auto">
-        {{ sound.name }}
+    <mat-list-item *ngFor="let sound of sounds$ | async" fxLayout="row" fxLayoutAlign="start center">
+      <app-audio-preview [sound]="sound"></app-audio-preview>
+      <mat-radio-button [checked]="selection.fileName === sound.fileName" [value]="sound.fileName" (change)="selectSound(sound)">
+        {{ sound.label }}
       </mat-radio-button>
     </mat-list-item>
   </mat-list>

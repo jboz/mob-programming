@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { SettingsState } from './settings.store';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { SelectSound, SettingsState } from './settings.store';
+import { Sound } from './sound.model';
 
 @Component({
   selector: 'app-settings-dialog',
@@ -8,7 +10,10 @@ import { SettingsState } from './settings.store';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-  selection: string;
+  @Select(SettingsState.sounds)
+  sounds$: Observable<Sound[]>;
+
+  selection: Sound;
 
   constructor(private store: Store) {}
 
@@ -16,5 +21,7 @@ export class SettingsComponent implements OnInit {
     this.store.selectOnce(SettingsState.sound).subscribe(sound => (this.selection = sound));
   }
 
-  selectSound(file: string) {}
+  selectSound(sound: Sound) {
+    this.store.dispatch(new SelectSound(sound)).subscribe(() => (this.selection = sound));
+  }
 }

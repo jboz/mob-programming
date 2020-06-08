@@ -10,10 +10,9 @@ import { AppComponent } from './app.component';
 import { MobsService } from './mob/mob.service';
 import { MobState } from './mob/mob.store';
 import { SettingsState } from './settings/settings.store';
-import { SettingsaudioPreviewComponent } from './settingsaudio-preview/settingsaudio-preview.component';
 
 @NgModule({
-  declarations: [AppComponent, SettingsaudioPreviewComponent],
+  declarations: [AppComponent],
   imports: [
     AppRoutingModule,
     BrowserAnimationsModule,

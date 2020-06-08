@@ -1,15 +1,15 @@
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Sound } from './sound.model';
 
-const DEFAULT_SOUND = 'bullfrog.ogg';
+const DEFAULT_SOUND: Sound = { label: 'Bull Frog', fileName: 'bullfrog.ogg' };
 
 export interface SettingsStateModel {
-  sound: string;
+  sound: Sound;
 }
 
 export class SelectSound {
   static readonly type = '[Settings] SelectSound]';
-  constructor(public readonly soundFileName: string) {}
+  constructor(public readonly sound: Sound) {}
 }
 
 @State<SettingsStateModel>({
@@ -18,7 +18,7 @@ export class SelectSound {
 })
 export class SettingsState {
   @Selector()
-  public static sound(state: SettingsStateModel): string {
+  public static sound(state: SettingsStateModel): Sound {
     return state.sound;
   }
 
@@ -36,7 +36,7 @@ export class SettingsState {
   }
 
   @Action(SelectSound)
-  selectSound(ctx: StateContext<SettingsStateModel>, { soundFileName }: SelectSound) {
-    ctx.patchState({ sound: soundFileName });
+  selectSound(ctx: StateContext<SettingsStateModel>, { sound }: SelectSound) {
+    ctx.patchState({ sound });
   }
 }

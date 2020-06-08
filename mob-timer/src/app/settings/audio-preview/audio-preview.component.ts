@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import * as moment from 'moment';
 import { Sound } from './../sound.model';
 
 @Component({
@@ -6,19 +7,47 @@ import { Sound } from './../sound.model';
   templateUrl: './audio-preview.component.html',
   styleUrls: ['./audio-preview.component.scss']
 })
-export class AudioPreviewComponent implements OnInit {
+export class AudioPreviewComponent implements AfterViewInit {
   @Input()
-  private sound: Sound;
+  sound: Sound;
+
+  @ViewChild('audio')
+  private audio: ElementRef<HTMLAudioElement>;
 
   playing = false;
+  duration: string;
+  percent = 0;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngAfterViewInit() {
+    this.audio.nativeElement.addEventListener('ended', () => {
+      this.playing = false;
+      setTimeout(() => {
+        this.percent = 0;
+      }, 1000);
+    });
+    this.audio.nativeElement.addEventListener('loadedmetadata', () => {
+      this.duration = moment
+        .duration(Math.round(this.audio.nativeElement.duration), 'seconds')
+        .toISOString()
+        .replace('PT', '')
+        .toLowerCase();
+    });
+    this.audio.nativeElement.addEventListener(
+      'timeupdate',
+      () => (this.percent = Math.round((this.audio.nativeElement.currentTime * 100) / this.audio.nativeElement.duration))
+    );
+  }
 
-  play() {}
+  play() {
+    this.audio.nativeElement.play().then(() => (this.playing = true));
+  }
 
-  pause() {}
+  pause() {
+    this.audio.nativeElement.pause();
+    this.playing = false;
+  }
 
   path(fileName: string) {
     return `/assets/sounds/${fileName}`;

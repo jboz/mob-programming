@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { SettingsState } from './settings/settings.store';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  constructor() {
+  constructor(private store: Store) {
     Notification.requestPermission();
   }
 
   notify(nextMober: string) {
     this.showDeviceNotification(nextMober);
-    // this.playSound(sound);
+    this.store.selectOnce(SettingsState.sound).subscribe(sound => this.playSound(sound.fileName));
   }
 
   private playSound(sound: string) {
