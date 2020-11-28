@@ -26,11 +26,13 @@ jobs:
       - uses: actions/setup-node@master
         with:
           node-version: "12.x"
-      - run: |
+      - name: Build
+        run: |
           cd ${{ env.appName }}
           npm install
           npm run build
-      - uses: w9jds/firebase-action@master
+      - name: Deploy
+        uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting:${{ env.appName }}
         env:
