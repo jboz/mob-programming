@@ -31,4 +31,8 @@ export class NotificationService {
       });
     }
   }
+
+  private getServiceWorker() {
+    return navigator.serviceWorker.getRegistration('');
+  }
 }
