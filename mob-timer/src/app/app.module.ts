@@ -1,3 +1,4 @@
+import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,7 +18,7 @@ import { SettingsState } from './settings/settings.store';
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
 
     NgxsModule.forRoot([MobState, SettingsState], { developmentMode: !environment.production }),
     NgxsStoragePluginModule.forRoot({
@@ -31,7 +32,7 @@ import { SettingsState } from './settings/settings.store';
       }
     })
   ],
-  providers: [],
+  providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

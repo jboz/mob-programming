@@ -8,6 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "deploy": "firebase deploy --only hosting:mob-timer",
+    "predeploy": "npm run build",
     "server": "cd dist && npx http-server -c-1"
   },
   "private": true,

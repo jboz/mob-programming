@@ -21,18 +21,29 @@ export class NotificationService {
 
   private showDeviceNotification(nextMober: string) {
     if (Notification.permission === 'granted') {
-      // tslint:disable-next-line: no-unused-expression
-      new Notification(`Time is up`, {
-        body: `Next mober ${nextMober ? `'${nextMober}' ` : ''}to play!`,
-        icon: 'assets/icons/icon-128x128.png',
-        dir: 'auto',
-        vibrate: [100, 50, 100],
-        timestamp: 3000
+      this.getServiceWorker().then(registration => {
+        if (registration) {
+          registration.showNotification(`Time is up`, {
+            body: `Next mober ${nextMober ? `'${nextMober}' ` : ''}to play!`,
+            icon: 'assets/icons/icon-128x128.png',
+            dir: 'auto',
+            vibrate: [100, 50, 100],
+            timestamp: 3000
+          });
+        }
       });
     }
   }
 
   private getServiceWorker() {
-    return navigator.serviceWorker.getRegistration('');
+    return navigator.serviceWorker.getRegistration('/ngsw-worker.js');
+  }
+
+  public requestPermission() {
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        navigator.serviceWorker.register('/ngsw-worker.js');
+      }
+    });
   }
 }
