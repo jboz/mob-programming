@@ -41,7 +41,7 @@ export class ThemePickerComponent {
       name: 'red-blue',
       displayName: 'Red & Blue',
       primary: '#da2323',
-      accent: '#2979ff',
+      accent: '#3f51b5',
       isDark: false
     }
   ];
