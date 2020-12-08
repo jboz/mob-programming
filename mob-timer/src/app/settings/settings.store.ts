@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Sound } from './sound.model';
 
@@ -16,6 +17,7 @@ export class SelectSound {
   name: 'settings',
   defaults: { sound: DEFAULT_SOUND }
 })
+@Injectable()
 export class SettingsState {
   @Selector()
   public static sound(state: SettingsStateModel): Sound {

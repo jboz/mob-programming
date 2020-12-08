@@ -2,6 +2,7 @@
   <mat-toolbar color="primary" class="mat-elevation-z8">
     <span fxFlex="1 1 auto">{{ (mob$ | async).name || 'Mob programming' }}</span>
 
+    <app-theme-picker></app-theme-picker>
     <button *ngIf="!(mob$ | async).name" (click)="showConnectDialog()" title="Connect" mat-icon-button>
       <mat-icon>cloud_off</mat-icon>
     </button>

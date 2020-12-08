@@ -1,4 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+@import '~angular-material-css-vars/main';
+
+// init theme (https://github.com/johannesjo/angular-material-css-vars)
+@include init-material-css-vars() {
+}
 
 html,
 body {
@@ -17,8 +21,6 @@ app-root,
   overflow: hidden;
   margin: 0;
   height: 100%;
-  box-sizing: border-box;
-  color: #e0e0e0;
 }
 
 mat-toolbar {

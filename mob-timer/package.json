@@ -7,7 +7,9 @@
     "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
-    "deploy": "firebase deploy --only hosting:mob-timer"
+    "deploy": "firebase deploy --only hosting:mob-timer",
+    "predeploy": "npm run build",
+    "server": "cd dist && npx http-server -c-1"
   },
   "private": true,
   "dependencies": {
@@ -26,6 +28,7 @@
     "@angular/service-worker": "~9.0.6",
     "@ngxs/storage-plugin": "^3.6.2",
     "@ngxs/store": "^3.6.2",
+    "angular-material-css-vars": "^1.1.1",
     "firebase": "^7.14.5",
     "immer": "^6.0.5",
     "moment": "^2.24.0",
