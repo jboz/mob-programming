@@ -16,6 +16,11 @@
     {
       "src": "assets/icons/icon-192x192.png",
       "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-196x196_maskable.png",
+      "sizes": "196x196",
       "type": "image/png",
       "purpose": "maskable"
     },

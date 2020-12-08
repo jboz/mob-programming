@@ -1,10 +1,12 @@
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AngularFireModule } from '@angular/fire';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { NgxsStoragePluginModule } from '@ngxs/storage-plugin';
 import { NgxsModule } from '@ngxs/store';
+import { MaterialCssVarsModule } from 'angular-material-css-vars';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +17,7 @@ import { SettingsState } from './settings/settings.store';
 @NgModule({
   declarations: [AppComponent],
   imports: [
+    BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
@@ -30,7 +33,8 @@ import { SettingsState } from './settings/settings.store';
         }
         return { ...item };
       }
-    })
+    }),
+    MaterialCssVarsModule.forRoot({ isAutoContrast: true })
   ],
   providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
   bootstrap: [AppComponent]

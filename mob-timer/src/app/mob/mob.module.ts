@@ -11,6 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { ThemePickerModule } from '../theme-picker/theme-picker.module';
 import { ConnectDialogComponent } from './components/connect-dialog/connect-dialog.component';
 import { CreateDialogComponent } from './components/create-dialog/create-dialog.component';
 import { DisconnectDialogComponent } from './components/disconnect-dialog/disconnect-dialog.component';
@@ -27,6 +28,8 @@ import { TimerComponent } from './components/timer/timer.component';
     ReactiveFormsModule,
 
     FlexLayoutModule,
+
+    ThemePickerModule,
 
     MatDialogModule,
     MatIconModule,
