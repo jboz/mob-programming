@@ -43,6 +43,20 @@ export class ThemePickerComponent {
       primary: '#da2323',
       accent: '#3f51b5',
       isDark: false
+    },
+    {
+      name: 'teams-light',
+      displayName: 'Teams Light',
+      primary: '#464775',
+      accent: '#3f51b5',
+      isDark: false
+    },
+    {
+      name: 'teams-dark',
+      displayName: 'Teams Dark',
+      primary: '#464775',
+      accent: '#ff4081',
+      isDark: true
     }
   ];
 

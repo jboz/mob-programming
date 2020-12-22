@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { MobsService } from './mob/mob.service';
 import { MobState } from './mob/mob.store';
 import { SettingsState } from './settings/settings.store';
+import { ThemePickerModule } from './theme-picker/theme-picker.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,7 +35,9 @@ import { SettingsState } from './settings/settings.store';
         return { ...item };
       }
     }),
-    MaterialCssVarsModule.forRoot({ isAutoContrast: true })
+    MaterialCssVarsModule.forRoot({ isAutoContrast: true }),
+
+    ThemePickerModule
   ],
   providers: [Location, { provide: LocationStrategy, useClass: PathLocationStrategy }],
   bootstrap: [AppComponent]

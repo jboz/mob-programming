@@ -13,9 +13,9 @@ export interface DocsSiteTheme {
 export class ThemeStorage {
   static storageKey = 'docs-theme-storage-current-name';
 
-  storeTheme(theme: DocsSiteTheme) {
+  storeTheme(theme: DocsSiteTheme | string) {
     try {
-      window.localStorage[ThemeStorage.storageKey] = theme.name;
+      window.localStorage[ThemeStorage.storageKey] = typeof theme === 'string' ? theme : theme.name;
     } catch {}
   }
 
