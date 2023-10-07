@@ -21,14 +21,12 @@ export const useCollection = <S = unknown>(path: string): [S[] | undefined, (pat
 
   useEffect(() => {
     onSnapshot(q, snapshot => {
-      console.log(`onSnapshot collection`);
       setValue(snapshot.docs.map(doc => doc.data() as S));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addValue = (docPath: string, data: Partial<S>) => {
-    console.log(`addValue`);
     setDoc(doc(db, path + '/' + docPath), data, {
       merge: true
     });
@@ -49,7 +47,6 @@ export const useDoc = <S = unknown>(
       const q = doc(db, collection + '/' + path);
 
       onSnapshot(q, s => {
-        console.log(`onSnapshot doc`);
         setSnapshot(s);
         setValue(s.data() as S);
       });
@@ -58,7 +55,6 @@ export const useDoc = <S = unknown>(
   }, []);
 
   const updateValue = (data: Partial<S>) => {
-    console.log(`updateValue`, data);
     setDoc(doc(db, collection + '/' + path), data, {
       merge: true
     });
@@ -66,17 +62,3 @@ export const useDoc = <S = unknown>(
 
   return [value, updateValue, snapshot];
 };
-
-// export const useDoc = <S = undefined>(path: string) => {
-//   const [doc, setDoc] = useState<S>();
-//   //const query = ref(database, path).child(roomThemePath);
-//   useEffect(() => {
-//     const docRef = ref(database, path);
-//     onSnapshot(docRef, {
-//       next: snapshot => setDoc(snapshot.data() as S)
-//     });
-//   // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, []);
-
-//   return doc;
-// };
