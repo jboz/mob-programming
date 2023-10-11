@@ -8,7 +8,13 @@
         "mob-timer": [
           "timer-mob-programming"
         ]
-      }
+      },
+      "mob-programming-x": {
+        "hosting": {
+          "mob-programming": [
+            "mob-programming"
+          ]
+        }
     }
   }
 }
